@@ -34,4 +34,5 @@
     <string name="wins_losses">Wins - Losses</string>
     <string name="reset_stats">Reset stats</string>
     <string name="stats">Stats</string>
+    <string name="player_location">Player %d</string>
 </resources>

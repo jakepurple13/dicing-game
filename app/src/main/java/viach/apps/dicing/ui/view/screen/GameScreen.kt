@@ -142,10 +142,30 @@ private fun PortraitScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         GameBar(
-            gameField = game.getGameField(1),
-            rowCellsCount =  3,
+            gameField = game.getGameField(2),
+            rowCellsCount = 3,
+            playerPosition = 2,
             layoutPadding = PaddingValues(16.dp),
-            itemPadding = PaddingValues(8.dp)
+            itemPadding = PaddingValues(8.dp),
+            itemsClickable = ai == null
+        ) { position ->
+            if (game.isPlayerMove(2)) {
+                onGameChange(game.makeMove(position, 2).createNextDice())
+            } else {
+                onMessageChange(context.getString(R.string.player_format_moves, 1))
+            }
+        }
+        StatusBar(
+            leftScore = game.getGameField(1).score,
+            rightScore = game.getGameField(2).score,
+            dice = game.nextDice
+        )
+        GameBar(
+            gameField = game.getGameField(1),
+            rowCellsCount = 3,
+            layoutPadding = PaddingValues(16.dp),
+            itemPadding = PaddingValues(8.dp),
+            playerPosition = 1,
         ) { position ->
             if (game.isPlayerMove(1)) {
                 val newGame = game.makeMove(position, 1).createNextDice()
@@ -160,24 +180,6 @@ private fun PortraitScreen(
                 }
             } else {
                 onMessageChange(context.getString(R.string.player_format_moves, 2))
-            }
-        }
-        StatusBar(
-            leftScore = game.getGameField(1).score,
-            rightScore = game.getGameField(2).score,
-            dice = game.nextDice
-        )
-        GameBar(
-            gameField = game.getGameField(2),
-            rowCellsCount =  3,
-            layoutPadding = PaddingValues(16.dp),
-            itemPadding = PaddingValues(8.dp),
-            itemsClickable = ai == null
-        ) { position ->
-            if (game.isPlayerMove(2)) {
-                onGameChange(game.makeMove(position, 2).createNextDice())
-            } else {
-                onMessageChange(context.getString(R.string.player_format_moves, 1))
             }
         }
     }
@@ -213,7 +215,6 @@ private fun LandscapeScreen(
                     rowCellsCount =  3,
                     layoutPadding = PaddingValues(16.dp),
                     itemPadding = PaddingValues(8.dp),
-                    iconRotation = -90f
                 ) { position ->
                     if (game.isPlayerMove(1)) {
                         val newGame = game.makeMove(position, 1).createNextDice()
@@ -242,7 +243,6 @@ private fun LandscapeScreen(
                     rowCellsCount =  3,
                     layoutPadding = PaddingValues(16.dp),
                     itemPadding = PaddingValues(8.dp),
-                    iconRotation = -90f,
                     itemsClickable = ai == null
                 ) { position ->
                     if (game.isPlayerMove(2)) {

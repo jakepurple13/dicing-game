@@ -35,4 +35,5 @@
     <string name="reset_stats">Reset stats</string>
     <string name="stats">Stats</string>
     <string name="player_location">Player %d</string>
+    <string name="show_hide_board">Show/Hide Board</string>
 </resources>

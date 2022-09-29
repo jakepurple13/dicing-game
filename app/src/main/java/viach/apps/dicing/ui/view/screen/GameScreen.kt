@@ -3,10 +3,12 @@ package viach.apps.dicing.ui.view.screen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -89,6 +91,72 @@ fun GameScreen(
                 onClick = onBackToMenuIntent
             )
             VerticalSpacer(16.dp)
+
+            var showBoard by remember { mutableStateOf(false) }
+
+            MaxWidthButton(
+                textRes = R.string.show_hide_board,
+                onClick = { showBoard = !showBoard }
+            )
+
+            AnimatedVisibility(visible = showBoard) {
+                val player2 = game.getGameField(2)
+                val player1 = game.getGameField(1)
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        stringResource(R.string.player_location, 2),
+                        style = MaterialTheme.typography.h4
+                    )
+                    for (y in 0 until 3) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            for (x in 0 until 3) {
+                                val position = y * 3 + x + 1
+                                val dice = player2.getDice(position)
+                                Text(dice.value.toString())
+                            }
+                        }
+                    }
+
+                    Divider()
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(
+                            "${player1.score}",
+                            style = MaterialTheme.typography.body1
+                        )
+                        Text(
+                            "${player2.score}",
+                            style = MaterialTheme.typography.body1
+                        )
+                    }
+
+                    Divider()
+
+                    for (y in 0 until 3) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            for (x in 0 until 3) {
+                                val position = y * 3 + x + 1
+                                val dice = player1.getDice(position)
+                                Text(dice.value.toString())
+                            }
+                        }
+                    }
+                    Text(
+                        stringResource(R.string.player_location, 1),
+                        style = MaterialTheme.typography.h4
+                    )
+                }
+            }
         }
     } else {
         when (orientation) {

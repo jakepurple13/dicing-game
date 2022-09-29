@@ -3,6 +3,7 @@ package viach.apps.dicing.ui.view.screen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
@@ -59,6 +60,17 @@ fun GameScreen(
             onDismissIntent = { message = null }
         )
     }
+
+    var leaving by remember { mutableStateOf(false) }
+
+    BackHandler(true) { leaving = true }
+    CustomDialog(
+        isVisible = leaving,
+        title = stringResource(R.string.leaving),
+        message = stringResource(R.string.leaving_prompt),
+        confirmButton = { MaxWidthButton(text = stringResource(R.string.yes), onClick = onBackToMenuIntent) },
+        onDismissIntent = { leaving = false }
+    )
 
     if (game.gameOver) {
         if (scoreNotUpdated) {

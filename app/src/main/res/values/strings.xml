@@ -7,6 +7,7 @@
     <string name="play">Play</string>
     <string name="select_difficulty">Select difficulty</string>
     <string name="okay">Okay</string>
+    <string name="dismiss">Dismiss</string>
     <string name="player_format_moves">Player %d moves!</string>
     <string name="rules">Rules</string>
     <string name="rules_description_part_1">
@@ -36,4 +37,7 @@
     <string name="stats">Stats</string>
     <string name="player_location">Player %d</string>
     <string name="show_hide_board">Show/Hide Board</string>
+    <string name="leaving">Leaving?</string>
+    <string name="leaving_prompt">Are you sure? You will lose your progress.</string>
+    <string name="yes">Yes</string>
 </resources>

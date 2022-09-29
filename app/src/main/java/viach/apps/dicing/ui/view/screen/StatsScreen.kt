@@ -1,10 +1,9 @@
 package viach.apps.dicing.ui.view.screen
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -22,8 +21,7 @@ import viach.apps.dicing.ui.view.component.VerticalSpacer
 
 @Composable
 fun StatsScreen(
-    stats: StatsCache,
-    onBackToMenuIntent: () -> Unit
+    stats: StatsCache
 ) {
     val scrollState = rememberScrollState()
     val currentStats: StatsPreferences = stats.all.collectAsState(initial = null).value ?: return
@@ -33,6 +31,17 @@ fun StatsScreen(
             .fillMaxWidth()
             .verticalScroll(scrollState)
     ) {
+        VerticalSpacer(16.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Box(
+                Modifier
+                    .background(MaterialTheme.colors.onBackground, RoundedCornerShape(4.dp))
+                    .size(width = 100.dp, height = 8.dp)
+            )
+        }
         VerticalSpacer(32.dp)
         Text(
             text = stringResource(R.string.wins_losses),
@@ -70,11 +79,6 @@ fun StatsScreen(
         MaxWidthButton(
             textRes = R.string.reset_stats,
             onClick = stats::clear
-        )
-        VerticalSpacer(16.dp)
-        MaxWidthButton(
-            textRes = R.string.back_to_menu,
-            onClick = onBackToMenuIntent
         )
         VerticalSpacer(32.dp)
     }

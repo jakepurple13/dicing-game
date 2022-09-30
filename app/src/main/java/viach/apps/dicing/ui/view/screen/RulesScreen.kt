@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -32,64 +35,77 @@ fun RulesScreen(
     var game by rememberSaveable { mutableStateOf(game) }
     val coroutineScope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.verticalScroll(scrollState)) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(id = R.string.rules)) },
+                backgroundColor = MaterialTheme.colors.background
+            )
+        }
+    ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(padding)
+                .verticalScroll(scrollState)
         ) {
-            VerticalSpacer(16.dp)
-            Text(
-                text = stringResource(R.string.rules_description_part_1),
-                textAlign = TextAlign.Justify
-            )
-            VerticalSpacer(16.dp)
-            Text(
-                text = stringResource(R.string.playing_field_preview_below),
-                textAlign = TextAlign.Justify
-            )
-            VerticalSpacer(16.dp)
-            GameBar(
-                gameField = game.getGameField(1),
-                rowCellsCount = 3,
-                onPlaceDiceIntent = { position ->
-                    game = game.makeMove(position, 1).createNextDice()
-                    if (game.gameOver) {
-                        coroutineScope.launch {
-                            delay(2000)
-                            game = game.newGame
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                VerticalSpacer(16.dp)
+                Text(
+                    text = stringResource(R.string.rules_description_part_1),
+                    textAlign = TextAlign.Justify
+                )
+                VerticalSpacer(16.dp)
+                Text(
+                    text = stringResource(R.string.playing_field_preview_below),
+                    textAlign = TextAlign.Justify
+                )
+                VerticalSpacer(16.dp)
+                GameBar(
+                    gameField = game.getGameField(1),
+                    rowCellsCount = 3,
+                    onPlaceDiceIntent = { position ->
+                        game = game.makeMove(position, 1).createNextDice()
+                        if (game.gameOver) {
+                            coroutineScope.launch {
+                                delay(2000)
+                                game = game.newGame
+                            }
                         }
                     }
-                }
-            )
-            VerticalSpacer(16.dp)
-            Text(
-                text = stringResource(R.string.status_bar_preview_below),
-                textAlign = TextAlign.Justify
-            )
-            VerticalSpacer(16.dp)
-            StatusBar(
-                leftScore = game.getGameField(1).score,
-                rightScore = 0,
-                dice = game.nextDice!!
-            )
-            VerticalSpacer(16.dp)
-            Text(
-                text = stringResource(R.string.rules_description_part_2),
-                textAlign = TextAlign.Justify
-            )
-            VerticalSpacer(16.dp)
-            Text(
-                text = stringResource(R.string.rules_description_part_3),
-                textAlign = TextAlign.Justify
+                )
+                VerticalSpacer(16.dp)
+                Text(
+                    text = stringResource(R.string.status_bar_preview_below),
+                    textAlign = TextAlign.Justify
+                )
+                VerticalSpacer(16.dp)
+                StatusBar(
+                    leftScore = game.getGameField(1).score,
+                    rightScore = 0,
+                    dice = game.nextDice!!
+                )
+                VerticalSpacer(16.dp)
+                Text(
+                    text = stringResource(R.string.rules_description_part_2),
+                    textAlign = TextAlign.Justify
+                )
+                VerticalSpacer(16.dp)
+                Text(
+                    text = stringResource(R.string.rules_description_part_3),
+                    textAlign = TextAlign.Justify
+                )
+                VerticalSpacer(16.dp)
+            }
+            MaxWidthButton(
+                textRes = R.string.back_to_menu,
+                onClick = onBackToMenuIntent,
             )
             VerticalSpacer(16.dp)
         }
-        MaxWidthButton(
-            textRes = R.string.back_to_menu,
-            onClick = onBackToMenuIntent,
-        )
-        VerticalSpacer(16.dp)
     }
 }

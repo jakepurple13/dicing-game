@@ -1,12 +1,14 @@
 package viach.apps.dicing.ui.view.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
@@ -19,7 +21,7 @@ import viach.apps.dicing.model.AIDifficulty
 import viach.apps.dicing.model.GameType
 import viach.apps.dicing.model.Screen
 
-@OptIn(ExperimentalMaterialNavigationApi::class)
+@OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen(
     userVsUserGameFactory: @Composable () -> Game = { get(GameType.USER_VS_USER.qualifier) },
@@ -30,13 +32,13 @@ fun MainScreen(
     stats: StatsCache = get()
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
-    val navController = rememberNavController(bottomSheetNavigator)
+    val navController = rememberAnimatedNavController(bottomSheetNavigator)
     ModalBottomSheetLayout(
         bottomSheetNavigator,
         sheetBackgroundColor = MaterialTheme.colors.background,
         sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
     ) {
-        NavHost(navController = navController, startDestination = Screen.Menu.route) {
+        AnimatedNavHost(navController = navController, startDestination = Screen.Menu.route) {
             composable(Screen.Menu.route) {
                 MenuScreen(
                     onPlayOpenIntent = { difficulty ->
@@ -51,7 +53,13 @@ fun MainScreen(
                     onRulesOpenIntent = { navController.navigate(Screen.Rules.route) }
                 )
             }
-            composable(Screen.PlayEasyGame.route) {
+            composable(
+                Screen.PlayEasyGame.route,
+                enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) },
+                popEnterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                popExitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) }
+            ) {
                 GameScreen(
                     game = userVsAiGame,
                     stats = stats,
@@ -60,7 +68,13 @@ fun MainScreen(
                     onBackToMenuIntent = { navController.popBackStack() }
                 )
             }
-            composable(Screen.PlayNormalGame.route) {
+            composable(
+                Screen.PlayNormalGame.route,
+                enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) },
+                popEnterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                popExitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) }
+            ) {
                 GameScreen(
                     game = userVsAiGame,
                     stats = stats,
@@ -69,7 +83,13 @@ fun MainScreen(
                     onBackToMenuIntent = { navController.popBackStack() }
                 )
             }
-            composable(Screen.PlayHardGame.route) {
+            composable(
+                Screen.PlayHardGame.route,
+                enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) },
+                popEnterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                popExitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) }
+            ) {
                 GameScreen(
                     game = userVsAiGame,
                     stats = stats,
@@ -78,7 +98,13 @@ fun MainScreen(
                     onBackToMenuIntent = { navController.popBackStack() }
                 )
             }
-            composable(Screen.TwoPlayersGame.route) {
+            composable(
+                Screen.TwoPlayersGame.route,
+                enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) },
+                popEnterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Start) },
+                popExitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.End) }
+            ) {
                 GameScreen(
                     game = userVsUserGameFactory(),
                     stats = stats,
@@ -88,7 +114,13 @@ fun MainScreen(
             bottomSheet(Screen.Stats.route) {
                 StatsScreen(stats = stats)
             }
-            composable(Screen.Rules.route) {
+            composable(
+                Screen.Rules.route,
+                enterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Up) },
+                exitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.Down) },
+                popEnterTransition = { slideIntoContainer(AnimatedContentScope.SlideDirection.Up) },
+                popExitTransition = { slideOutOfContainer(AnimatedContentScope.SlideDirection.Down) }
+            ) {
                 RulesScreen(
                     game = userVsUserGameFactory(),
                     onBackToMenuIntent = { navController.popBackStack() }

@@ -43,6 +43,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'viach.apps.dicing'
 }
 
 dependencies {
@@ -56,6 +57,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$android_lifecycle_version"
     implementation "androidx.activity:activity-compose:$compose_activity_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.26.4-beta"
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.26.4-beta"
     implementation "com.google.accompanist:accompanist-navigation-material:0.26.4-beta"
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"

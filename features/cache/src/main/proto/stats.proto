@@ -10,4 +10,8 @@ message StatsPreferences {
   int32 easyModeLossesCount = 4;
   int32 normalModeLossesCount = 5;
   int32 hardModeLossesCount = 6;
+
+  int32 easyModeHighestScore = 7;
+  int32 normalModeHighestScore = 8;
+  int32 hardModeHighestScore = 9;
 }

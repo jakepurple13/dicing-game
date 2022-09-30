@@ -40,4 +40,7 @@
     <string name="leaving">Leaving?</string>
     <string name="leaving_prompt">Are you sure? You will lose your progress.</string>
     <string name="yes">Yes</string>
+    <string name="easy_high_score">Easy High Score</string>
+    <string name="normal_high_score">Normal High Score</string>
+    <string name="hard_high_score">Hard High Score</string>
 </resources>

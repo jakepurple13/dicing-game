@@ -9,5 +9,8 @@ interface StatsCache {
     fun addEasyWinLossPoint(win: Boolean): Job
     fun addNormalWinLossPoint(win: Boolean): Job
     fun addHardWinLossPoint(win: Boolean): Job
+    fun setEasyModeHighScore(score: Int): Job
+    fun setNormalModeHighScore(score: Int): Job
+    fun setHardModeHighScore(score: Int): Job
     fun clear(): Job
 }

@@ -75,9 +75,18 @@ fun GameScreen(
     if (game.gameOver) {
         if (scoreNotUpdated) {
             when (difficulty) {
-                AIDifficulty.EASY -> stats.addEasyWinLossPoint(game.wonPlayerPosition == 1)
-                AIDifficulty.NORMAL -> stats.addNormalWinLossPoint(game.wonPlayerPosition == 1)
-                AIDifficulty.HARD -> stats.addHardWinLossPoint(game.wonPlayerPosition == 1)
+                AIDifficulty.EASY -> {
+                    stats.setEasyModeHighScore(game.getGameField(1).score)
+                    stats.addEasyWinLossPoint(game.wonPlayerPosition == 1)
+                }
+                AIDifficulty.NORMAL -> {
+                    stats.setNormalModeHighScore(game.getGameField(1).score)
+                    stats.addNormalWinLossPoint(game.wonPlayerPosition == 1)
+                }
+                AIDifficulty.HARD -> {
+                    stats.setHardModeHighScore(game.getGameField(1).score)
+                    stats.addHardWinLossPoint(game.wonPlayerPosition == 1)
+                }
                 null -> {}
             }
             scoreNotUpdated = false

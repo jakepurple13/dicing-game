@@ -45,6 +45,12 @@ class ProtoDataStoreStatsCache(
         }
     }
 
+    override fun setEasyModeHighScore(score: Int): Job = stats.update { setEasyModeHighestScore(score) }
+
+    override fun setNormalModeHighScore(score: Int): Job = stats.update { setNormalModeHighestScore(score) }
+
+    override fun setHardModeHighScore(score: Int): Job = stats.update { setHardModeHighestScore(score) }
+
     override fun clear(): Job =
         stats.update { clear() }
 }

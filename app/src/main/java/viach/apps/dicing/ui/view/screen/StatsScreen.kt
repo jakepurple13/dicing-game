@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -23,13 +24,12 @@ import viach.apps.dicing.ui.view.component.VerticalSpacer
 fun StatsScreen(
     stats: StatsCache
 ) {
-    val scrollState = rememberScrollState()
-    val currentStats: StatsPreferences = stats.all.collectAsState(initial = null).value ?: return
+    val currentStats: StatsPreferences by stats.all.collectAsState(StatsPreferences.newBuilder().build())
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
     ) {
         VerticalSpacer(16.dp)
         Row(
@@ -74,6 +74,30 @@ fun StatsScreen(
                 modifier = Modifier.weight(1f)
             )
             Text(text = "${currentStats.hardModeWinsCount} - ${currentStats.hardModeLossesCount}")
+        }
+        VerticalSpacer(16.dp)
+        Row(modifier = Modifier.padding(horizontal = 32.dp)) {
+            Text(
+                text = stringResource(R.string.easy_high_score),
+                modifier = Modifier.weight(1f)
+            )
+            Text(text = "${currentStats.easyModeHighestScore}")
+        }
+        VerticalSpacer(16.dp)
+        Row(modifier = Modifier.padding(horizontal = 32.dp)) {
+            Text(
+                text = stringResource(R.string.normal_high_score),
+                modifier = Modifier.weight(1f)
+            )
+            Text(text = "${currentStats.normalModeHighestScore}")
+        }
+        VerticalSpacer(16.dp)
+        Row(modifier = Modifier.padding(horizontal = 32.dp)) {
+            Text(
+                text = stringResource(R.string.hard_high_score),
+                modifier = Modifier.weight(1f)
+            )
+            Text(text = "${currentStats.hardModeHighestScore}")
         }
         VerticalSpacer(32.dp)
         MaxWidthButton(

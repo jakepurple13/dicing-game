@@ -43,4 +43,5 @@
     <string name="easy_high_score">Easy High Score</string>
     <string name="normal_high_score">Normal High Score</string>
     <string name="hard_high_score">Hard High Score</string>
+    <string name="game_over">Game Over</string>
 </resources>

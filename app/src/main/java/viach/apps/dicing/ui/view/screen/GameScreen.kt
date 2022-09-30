@@ -5,13 +5,14 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -31,6 +33,7 @@ import viach.apps.dicing.game.Game
 import viach.apps.dicing.model.AIDifficulty
 import viach.apps.dicing.ui.view.component.*
 
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("SwitchIntDef")
 @Suppress("NAME_SHADOWING")
 @Composable
@@ -44,6 +47,7 @@ fun GameScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+    val scaffoldState = rememberBottomSheetScaffoldState()
     val orientation = LocalConfiguration.current.orientation
     var game: Game by rememberSaveable { mutableStateOf(game) }
     var ai: AI? by rememberSaveable { mutableStateOf(ai) }
@@ -68,118 +72,158 @@ fun GameScreen(
         isVisible = leaving,
         title = stringResource(R.string.leaving),
         message = stringResource(R.string.leaving_prompt),
-        confirmButton = { MaxWidthButton(text = stringResource(R.string.yes), onClick = onBackToMenuIntent) },
+        confirmButton = {
+            MaxWidthButton(
+                text = stringResource(R.string.yes),
+                onClick = {
+                    leaving = false
+                    onBackToMenuIntent()
+                }
+            )
+        },
         onDismissIntent = { leaving = false }
     )
 
-    if (game.gameOver) {
-        if (scoreNotUpdated) {
-            when (difficulty) {
-                AIDifficulty.EASY -> {
-                    stats.setEasyModeHighScore(game.getGameField(1).score)
-                    stats.addEasyWinLossPoint(game.wonPlayerPosition == 1)
+    LaunchedEffect(game.gameOver, scoreNotUpdated) {
+        if (game.gameOver) {
+            if (scoreNotUpdated) {
+                when (difficulty) {
+                    AIDifficulty.EASY -> {
+                        stats.setEasyModeHighScore(game.getGameField(1).score)
+                        stats.addEasyWinLossPoint(game.wonPlayerPosition == 1)
+                    }
+                    AIDifficulty.NORMAL -> {
+                        stats.setNormalModeHighScore(game.getGameField(1).score)
+                        stats.addNormalWinLossPoint(game.wonPlayerPosition == 1)
+                    }
+                    AIDifficulty.HARD -> {
+                        stats.setHardModeHighScore(game.getGameField(1).score)
+                        stats.addHardWinLossPoint(game.wonPlayerPosition == 1)
+                    }
+                    null -> {}
                 }
-                AIDifficulty.NORMAL -> {
-                    stats.setNormalModeHighScore(game.getGameField(1).score)
-                    stats.addNormalWinLossPoint(game.wonPlayerPosition == 1)
-                }
-                AIDifficulty.HARD -> {
-                    stats.setHardModeHighScore(game.getGameField(1).score)
-                    stats.addHardWinLossPoint(game.wonPlayerPosition == 1)
-                }
-                null -> {}
+                scaffoldState.bottomSheetState.expand()
+                scoreNotUpdated = false
             }
-            scoreNotUpdated = false
         }
+    }
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetPeekHeight = animateDpAsState(if (game.gameOver) BottomSheetScaffoldDefaults.SheetPeekHeight else 0.dp).value,
+        sheetBackgroundColor = MaterialTheme.colors.background,
+        sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+        sheetContent = {
+            VerticalSpacer(16.dp)
             Text(
-                text = stringResource(R.string.player_format_won_the_game, game.wonPlayerPosition!!),
-                modifier = Modifier.padding(32.dp),
-                style = MaterialTheme.typography.body2
+                stringResource(id = R.string.game_over),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
             )
-            MaxWidthButton(
-                textRes = R.string.play_again,
-                onClick = { game = game.newGame }
-            )
-            VerticalSpacer(16.dp)
-            MaxWidthButton(
-                textRes = R.string.back_to_menu,
-                onClick = onBackToMenuIntent
-            )
-            VerticalSpacer(16.dp)
-
-            var showBoard by remember { mutableStateOf(false) }
-
-            MaxWidthButton(
-                textRes = R.string.show_hide_board,
-                onClick = { showBoard = !showBoard }
-            )
-
-            AnimatedVisibility(visible = showBoard) {
-                val player2 = game.getGameField(2)
-                val player1 = game.getGameField(1)
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Box(
+                    Modifier
+                        .background(MaterialTheme.colors.onBackground, RoundedCornerShape(4.dp))
+                        .size(width = 100.dp, height = 8.dp)
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                if (game.gameOver) {
                     Text(
-                        stringResource(R.string.player_location, 2),
-                        style = MaterialTheme.typography.h4
+                        text = stringResource(R.string.player_format_won_the_game, game.wonPlayerPosition!!),
+                        modifier = Modifier.padding(32.dp),
+                        style = MaterialTheme.typography.body2
                     )
-                    for (y in 0 until 3) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            for (x in 0 until 3) {
-                                val position = y * 3 + x + 1
-                                val dice = player2.getDice(position)
-                                Text(dice.value.toString())
+                    MaxWidthButton(
+                        textRes = R.string.play_again,
+                        onClick = { game = game.newGame }
+                    )
+                    VerticalSpacer(16.dp)
+                    MaxWidthButton(
+                        textRes = R.string.back_to_menu,
+                        onClick = onBackToMenuIntent
+                    )
+                    VerticalSpacer(16.dp)
+
+                    var showBoard by remember { mutableStateOf(false) }
+
+                    MaxWidthButton(
+                        textRes = R.string.show_hide_board,
+                        onClick = { showBoard = !showBoard }
+                    )
+
+                    AnimatedVisibility(visible = showBoard) {
+                        val player2 = game.getGameField(2)
+                        val player1 = game.getGameField(1)
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                stringResource(R.string.player_location, 2),
+                                style = MaterialTheme.typography.h4
+                            )
+                            for (y in 0 until 3) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    for (x in 0 until 3) {
+                                        val position = y * 3 + x + 1
+                                        val dice = player2.getDice(position)
+                                        Text(dice.value.toString())
+                                    }
+                                }
                             }
+
+                            Divider()
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                Text(
+                                    "${player1.score}",
+                                    style = MaterialTheme.typography.body1
+                                )
+                                Text(
+                                    "${player2.score}",
+                                    style = MaterialTheme.typography.body1
+                                )
+                            }
+
+                            Divider()
+
+                            for (y in 0 until 3) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    for (x in 0 until 3) {
+                                        val position = y * 3 + x + 1
+                                        val dice = player1.getDice(position)
+                                        Text(dice.value.toString())
+                                    }
+                                }
+                            }
+                            Text(
+                                stringResource(R.string.player_location, 1),
+                                style = MaterialTheme.typography.h4
+                            )
                         }
                     }
-
-                    Divider()
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Text(
-                            "${player1.score}",
-                            style = MaterialTheme.typography.body1
-                        )
-                        Text(
-                            "${player2.score}",
-                            style = MaterialTheme.typography.body1
-                        )
-                    }
-
-                    Divider()
-
-                    for (y in 0 until 3) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            for (x in 0 until 3) {
-                                val position = y * 3 + x + 1
-                                val dice = player1.getDice(position)
-                                Text(dice.value.toString())
-                            }
-                        }
-                    }
-                    Text(
-                        stringResource(R.string.player_location, 1),
-                        style = MaterialTheme.typography.h4
-                    )
                 }
             }
         }
-    } else {
+    ) { padding ->
         when (orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 PortraitScreen(
@@ -191,7 +235,8 @@ fun GameScreen(
                     onGameChange = { game = it },
                     onAIChange = { ai = it },
                     onMessageChange = { message = it },
-                    onBackToMenuIntent = onBackToMenuIntent
+                    onBackToMenuIntent = onBackToMenuIntent,
+                    paddingValues = padding
                 )
             }
             Configuration.ORIENTATION_LANDSCAPE -> {
@@ -204,7 +249,8 @@ fun GameScreen(
                     onAIChange = { ai = it },
                     onGameChange = { game = it },
                     onMessageChange = { message = it },
-                    onBackToMenuIntent = onBackToMenuIntent
+                    onBackToMenuIntent = onBackToMenuIntent,
+                    paddingValues = padding
                 )
             }
         }
@@ -218,6 +264,7 @@ private fun PortraitScreen(
     scrollState: ScrollState,
     game: Game,
     ai: AI?,
+    paddingValues: PaddingValues,
     onGameChange: (Game) -> Unit,
     onAIChange: (AI) -> Unit,
     onMessageChange: (String?) -> Unit,
@@ -226,8 +273,9 @@ private fun PortraitScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .padding(paddingValues)
+            .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         GameBar(
@@ -284,13 +332,15 @@ private fun LandscapeScreen(
     onGameChange: (Game) -> Unit,
     onAIChange: (AI) -> Unit,
     onMessageChange: (String?) -> Unit,
-    onBackToMenuIntent: () -> Unit
+    onBackToMenuIntent: () -> Unit,
+    paddingValues: PaddingValues
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .padding(paddingValues)
+            .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -301,7 +351,7 @@ private fun LandscapeScreen(
             ) {
                 GameBar(
                     gameField = game.getGameField(1),
-                    rowCellsCount =  3,
+                    rowCellsCount = 3,
                     layoutPadding = PaddingValues(16.dp),
                     itemPadding = PaddingValues(8.dp),
                 ) { position ->
@@ -329,7 +379,7 @@ private fun LandscapeScreen(
             ) {
                 GameBar(
                     gameField = game.getGameField(2),
-                    rowCellsCount =  3,
+                    rowCellsCount = 3,
                     layoutPadding = PaddingValues(16.dp),
                     itemPadding = PaddingValues(8.dp),
                     itemsClickable = ai == null

@@ -104,6 +104,6 @@ fun StatsScreen(
             textRes = R.string.reset_stats,
             onClick = stats::clear
         )
-        VerticalSpacer(32.dp)
+        VerticalSpacer(16.dp)
     }
 }

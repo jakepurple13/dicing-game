@@ -15,6 +15,7 @@ import com.google.accompanist.navigation.material.bottomSheet
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import org.koin.androidx.compose.get
 import viach.apps.ai.ai.AI
+import viach.apps.cache.settings.SettingsCache
 import viach.apps.cache.status.StatsCache
 import viach.apps.dicing.game.Game
 import viach.apps.dicing.model.AIDifficulty
@@ -29,7 +30,8 @@ fun MainScreen(
     easyAI: AI = get(AIDifficulty.EASY.qualifier),
     normalAI: AI = get(AIDifficulty.NORMAL.qualifier),
     hardAI: AI = get(AIDifficulty.HARD.qualifier),
-    stats: StatsCache = get()
+    stats: StatsCache = get(),
+    settingsCache: SettingsCache = get()
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberAnimatedNavController(bottomSheetNavigator)
@@ -41,6 +43,7 @@ fun MainScreen(
         AnimatedNavHost(navController = navController, startDestination = Screen.Menu.route) {
             composable(Screen.Menu.route) {
                 MenuScreen(
+                    settingsCache = settingsCache,
                     onPlayOpenIntent = { difficulty ->
                         when (difficulty) {
                             AIDifficulty.EASY -> navController.navigate(Screen.PlayEasyGame.route)
@@ -50,7 +53,8 @@ fun MainScreen(
                     },
                     onTwoPlayersOpenIntent = { navController.navigate(Screen.TwoPlayersGame.route) },
                     onStatsOpenIntent = { navController.navigate(Screen.Stats.route) },
-                    onRulesOpenIntent = { navController.navigate(Screen.Rules.route) }
+                    onRulesOpenIntent = { navController.navigate(Screen.Rules.route) },
+                    onSettingsOpenIntent = { navController.navigate(Screen.Settings.route) }
                 )
             }
             composable(
@@ -113,6 +117,9 @@ fun MainScreen(
             }
             bottomSheet(Screen.Stats.route) {
                 StatsScreen(stats = stats)
+            }
+            bottomSheet(Screen.Settings.route) {
+                SettingsScreen(settingsCache = settingsCache)
             }
             composable(
                 Screen.Rules.route,

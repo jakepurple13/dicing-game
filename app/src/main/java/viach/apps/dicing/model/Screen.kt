@@ -11,4 +11,5 @@ sealed interface Screen {
     object TwoPlayersGame : Base("Two Players Game")
     object Stats : Base("Stats")
     object Rules : Base("Rules")
+    object Settings : Base("Settings")
 }

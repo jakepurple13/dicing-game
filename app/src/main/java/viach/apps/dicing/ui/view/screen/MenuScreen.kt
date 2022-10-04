@@ -5,39 +5,37 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import viach.apps.cache.settings.SettingsCache
 import viach.apps.dicing.R
 import viach.apps.dicing.model.AIDifficulty
 import viach.apps.dicing.ui.theme.spacing
-import viach.apps.dicing.ui.view.component.HorizontalSpacer
-import viach.apps.dicing.ui.view.component.MaxWidthButton
-import viach.apps.dicing.ui.view.component.ReverseMaxWidthButton
-import viach.apps.dicing.ui.view.component.VerticalSpacer
+import viach.apps.dicing.ui.view.component.*
 
 @Composable
 fun MenuScreen(
+    settingsCache: SettingsCache,
     onPlayOpenIntent: (AIDifficulty) -> Unit,
     onTwoPlayersOpenIntent: () -> Unit,
     onStatsOpenIntent: () -> Unit,
     onRulesOpenIntent: () -> Unit,
+    onSettingsOpenIntent: () -> Unit,
 ) {
     var showAIDifficultyDialog by rememberSaveable { mutableStateOf(false) }
+    val useDialog by settingsCache.useDifficultyDialog.collectAsState(false)
 
-    /*if (showAIDifficultyDialog) {
+    if (showAIDifficultyDialog && useDialog) {
         AIDifficultyDialog(
             onDifficultySelected = onPlayOpenIntent,
             onDismissIntent = { showAIDifficultyDialog = false }
         )
-    }*/
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -63,37 +61,39 @@ fun MenuScreen(
         }
         VerticalSpacer(MaterialTheme.spacing.xxl)
         MaxWidthButton(
-            textRes = if (showAIDifficultyDialog) R.string.select_difficulty else R.string.play,
+            textRes = if (showAIDifficultyDialog && !useDialog) R.string.select_difficulty else R.string.play,
             onClick = { showAIDifficultyDialog = !showAIDifficultyDialog }
         )
-        AnimatedVisibility(
-            visible = showAIDifficultyDialog
-        ) {
-            Column(
-                modifier = Modifier.padding(top = MaterialTheme.spacing.l),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.l)
+        if (!useDialog) {
+            AnimatedVisibility(
+                visible = showAIDifficultyDialog
             ) {
-                ReverseMaxWidthButton(
-                    textRes = R.string.easy,
-                    onClick = {
-                        showAIDifficultyDialog = false
-                        onPlayOpenIntent(AIDifficulty.EASY)
-                    }
-                )
-                ReverseMaxWidthButton(
-                    textRes = R.string.normal,
-                    onClick = {
-                        showAIDifficultyDialog = false
-                        onPlayOpenIntent(AIDifficulty.NORMAL)
-                    }
-                )
-                ReverseMaxWidthButton(
-                    textRes = R.string.hard,
-                    onClick = {
-                        showAIDifficultyDialog = false
-                        onPlayOpenIntent(AIDifficulty.HARD)
-                    }
-                )
+                Column(
+                    modifier = Modifier.padding(top = MaterialTheme.spacing.l),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.l)
+                ) {
+                    ReverseMaxWidthButton(
+                        textRes = R.string.easy,
+                        onClick = {
+                            showAIDifficultyDialog = false
+                            onPlayOpenIntent(AIDifficulty.EASY)
+                        }
+                    )
+                    ReverseMaxWidthButton(
+                        textRes = R.string.normal,
+                        onClick = {
+                            showAIDifficultyDialog = false
+                            onPlayOpenIntent(AIDifficulty.NORMAL)
+                        }
+                    )
+                    ReverseMaxWidthButton(
+                        textRes = R.string.hard,
+                        onClick = {
+                            showAIDifficultyDialog = false
+                            onPlayOpenIntent(AIDifficulty.HARD)
+                        }
+                    )
+                }
             }
         }
         VerticalSpacer(MaterialTheme.spacing.l)
@@ -110,6 +110,11 @@ fun MenuScreen(
         MaxWidthButton(
             textRes = R.string.rules,
             onClick = onRulesOpenIntent
+        )
+        VerticalSpacer(MaterialTheme.spacing.l)
+        MaxWidthButton(
+            textRes = R.string.settings,
+            onClick = onSettingsOpenIntent
         )
     }
 }

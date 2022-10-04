@@ -10,6 +10,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="player_format_moves">Player %d moves!</string>
     <string name="rules">Rules</string>
+    <string name="settings">Settings</string>
     <string name="rules_description_part_1">
         The player who will move first is randomly determined. In the game, you can notice 3 objects:
         the playing field of the first player, the playing field of the second player and the status bar.

@@ -1,6 +1,7 @@
 package viach.apps.dicing.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -37,12 +38,16 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun DicingTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun DicingTheme(
+    theme: Theme,
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     CompositionLocalProvider(
         LocalThemeSpacing provides remember { Spacing() }
     ) {
         MaterialTheme(
-            colors = if (darkTheme) DarkColorPalette else LightColorPalette,
+            colors = theme.getTheme(darkTheme),
             typography = Typography,
             shapes = Shapes,
             content = content
@@ -55,3 +60,10 @@ val MaterialTheme.spacing: Spacing
     @Composable
     @ReadOnlyComposable
     get() = LocalThemeSpacing.current
+
+enum class Theme(private val light: Colors = LightColorPalette, private val dark: Colors = DarkColorPalette) {
+    Default(LightColorPalette, LightColorPalette),
+    Blue(DarkColorPalette, DarkColorPalette);
+
+    fun getTheme(darkTheme: Boolean) = if (darkTheme) dark else light
+}

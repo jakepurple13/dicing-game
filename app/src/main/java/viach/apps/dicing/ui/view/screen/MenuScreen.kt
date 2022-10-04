@@ -1,5 +1,6 @@
 package viach.apps.dicing.ui.view.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import viach.apps.dicing.R
 import viach.apps.dicing.model.AIDifficulty
 import viach.apps.dicing.ui.theme.spacing
-import viach.apps.dicing.ui.view.component.AIDifficultyDialog
 import viach.apps.dicing.ui.view.component.HorizontalSpacer
 import viach.apps.dicing.ui.view.component.MaxWidthButton
+import viach.apps.dicing.ui.view.component.ReverseMaxWidthButton
 import viach.apps.dicing.ui.view.component.VerticalSpacer
 
 @Composable
@@ -31,12 +32,12 @@ fun MenuScreen(
 ) {
     var showAIDifficultyDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (showAIDifficultyDialog) {
+    /*if (showAIDifficultyDialog) {
         AIDifficultyDialog(
             onDifficultySelected = onPlayOpenIntent,
             onDismissIntent = { showAIDifficultyDialog = false }
         )
-    }
+    }*/
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -62,9 +63,39 @@ fun MenuScreen(
         }
         VerticalSpacer(MaterialTheme.spacing.xxl)
         MaxWidthButton(
-            textRes = R.string.play,
-            onClick = { showAIDifficultyDialog = true }
+            textRes = if (showAIDifficultyDialog) R.string.select_difficulty else R.string.play,
+            onClick = { showAIDifficultyDialog = !showAIDifficultyDialog }
         )
+        AnimatedVisibility(
+            visible = showAIDifficultyDialog
+        ) {
+            Column(
+                modifier = Modifier.padding(top = MaterialTheme.spacing.l),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.l)
+            ) {
+                ReverseMaxWidthButton(
+                    textRes = R.string.easy,
+                    onClick = {
+                        showAIDifficultyDialog = false
+                        onPlayOpenIntent(AIDifficulty.EASY)
+                    }
+                )
+                ReverseMaxWidthButton(
+                    textRes = R.string.normal,
+                    onClick = {
+                        showAIDifficultyDialog = false
+                        onPlayOpenIntent(AIDifficulty.NORMAL)
+                    }
+                )
+                ReverseMaxWidthButton(
+                    textRes = R.string.hard,
+                    onClick = {
+                        showAIDifficultyDialog = false
+                        onPlayOpenIntent(AIDifficulty.HARD)
+                    }
+                )
+            }
+        }
         VerticalSpacer(MaterialTheme.spacing.l)
         MaxWidthButton(
             textRes = R.string.two_players,

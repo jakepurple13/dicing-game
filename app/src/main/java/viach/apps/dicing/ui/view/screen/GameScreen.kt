@@ -278,6 +278,7 @@ private fun PortraitScreen(
     ) {
         GameBar(
             gameField = game.getGameField(2),
+            game = game,
             rowCellsCount = 3,
             playerPosition = 2,
             layoutPadding = PaddingValues(MaterialTheme.spacing.l),
@@ -297,6 +298,7 @@ private fun PortraitScreen(
         )
         GameBar(
             gameField = game.getGameField(1),
+            game = game,
             rowCellsCount = 3,
             layoutPadding = PaddingValues(MaterialTheme.spacing.l),
             itemPadding = PaddingValues(MaterialTheme.spacing.m),
@@ -349,6 +351,7 @@ private fun LandscapeScreen(
             ) {
                 GameBar(
                     gameField = game.getGameField(1),
+                    game = game,
                     rowCellsCount = 3,
                     layoutPadding = PaddingValues(MaterialTheme.spacing.l),
                     itemPadding = PaddingValues(MaterialTheme.spacing.m),
@@ -377,6 +380,7 @@ private fun LandscapeScreen(
             ) {
                 GameBar(
                     gameField = game.getGameField(2),
+                    game = game,
                     rowCellsCount = 3,
                     layoutPadding = PaddingValues(MaterialTheme.spacing.l),
                     itemPadding = PaddingValues(MaterialTheme.spacing.m),

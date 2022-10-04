@@ -2,9 +2,9 @@ package viach.apps.dicing.game
 
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import viach.apps.dicing.gamefield.GameField
 import viach.apps.dicing.dice.Dice
 import viach.apps.dicing.dicefactory.DiceFactory
+import viach.apps.dicing.gamefield.GameField
 import viach.apps.dicing.gamefield.SquareNineCellsGameField
 import viach.apps.dicing.player.FirstPlayer
 import viach.apps.dicing.player.SecondPlayer
@@ -62,17 +62,20 @@ class TwoPlayersGame(
                 set(movingField.position - 1, movingField.placeDice(nextDice!!, fieldPosition))
                 val newOtherGameField = when (fieldPosition) {
                     in setOf(1, 4, 7) -> {
-                        otherField.pullOutDice(1) { this == nextDice }
+                        otherField
+                            .pullOutDice(1) { this == nextDice }
                             .pullOutDice(4) { this == nextDice }
                             .pullOutDice(7) { this == nextDice }
                     }
                     in setOf(2, 5, 8) -> {
-                        otherField.pullOutDice(2) { this == nextDice }
+                        otherField
+                            .pullOutDice(2) { this == nextDice }
                             .pullOutDice(5) { this == nextDice }
                             .pullOutDice(8) { this == nextDice }
                     }
                     else -> {
-                        otherField.pullOutDice(3) { this == nextDice }
+                        otherField
+                            .pullOutDice(3) { this == nextDice }
                             .pullOutDice(6) { this == nextDice }
                             .pullOutDice(9) { this == nextDice }
                     }

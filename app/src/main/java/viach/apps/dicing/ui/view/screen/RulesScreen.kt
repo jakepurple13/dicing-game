@@ -66,6 +66,7 @@ fun RulesScreen(
                 )
                 GameBar(
                     gameField = game.getGameField(1),
+                    game = game,
                     rowCellsCount = 3,
                     onPlaceDiceIntent = { position ->
                         game = game.makeMove(position, 1).createNextDice()

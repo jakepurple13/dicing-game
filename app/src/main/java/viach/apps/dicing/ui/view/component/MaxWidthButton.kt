@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -35,6 +36,35 @@ fun MaxWidthButton(
     padding: PaddingValues = PaddingValues(end = MaterialTheme.spacing.xxl),
     onClick: () -> Unit
 ) = MaxWidthButton(
+    text = stringResource(textRes),
+    padding = padding,
+    onClick = onClick
+)
+
+@Composable
+fun ReverseMaxWidthButton(
+    text: String,
+    padding: PaddingValues = PaddingValues(start = MaterialTheme.spacing.xxl),
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(padding),
+        onClick = onClick,
+        shape = CutCornerShape(topStart = MaterialTheme.spacing.xl, bottomStart = MaterialTheme.spacing.xl)
+    ) {
+        Text(text = text)
+    }
+}
+
+
+@Composable
+fun ReverseMaxWidthButton(
+    @StringRes textRes: Int,
+    padding: PaddingValues = PaddingValues(start = MaterialTheme.spacing.xxl),
+    onClick: () -> Unit
+) = ReverseMaxWidthButton(
     text = stringResource(textRes),
     padding = padding,
     onClick = onClick

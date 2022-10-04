@@ -27,6 +27,5 @@ class TwoPlayersNormalAI(
         )
     }
 
-    override fun updateGame(game: Game): AI =
-        TwoPlayersNormalAI(game, ownPlayerPosition, opponentPlayerPosition)
+    override fun updateGame(game: Game): AI = TwoPlayersNormalAI(game, ownPlayerPosition, opponentPlayerPosition)
 }

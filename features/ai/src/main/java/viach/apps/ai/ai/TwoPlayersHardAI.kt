@@ -8,7 +8,7 @@ class TwoPlayersHardAI(
     override val game: Game,
     private val ownPlayerPosition: Int,
     private val opponentPlayerPosition: Int
-): AI {
+) : AI {
 
     override fun makeMove(): AI {
         val field = game.getGameField(ownPlayerPosition)

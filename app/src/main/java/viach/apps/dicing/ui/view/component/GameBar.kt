@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import viach.apps.dicing.R
 import viach.apps.dicing.gamefield.GameField
+import viach.apps.dicing.ui.theme.spacing
 
 @Composable
 fun GameBar(
@@ -22,7 +23,7 @@ fun GameBar(
     rowCellsCount: Int,
     playerPosition: Int = 0,
     layoutPadding: PaddingValues = PaddingValues(12.dp),
-    itemPadding: PaddingValues = PaddingValues(8.dp),
+    itemPadding: PaddingValues = PaddingValues(MaterialTheme.spacing.m),
     itemsClickable: Boolean = true,
     onPlaceDiceIntent: (position: Int) -> Unit
 ) {

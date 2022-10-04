@@ -31,6 +31,7 @@ import viach.apps.cache.status.StatsCache
 import viach.apps.dicing.R
 import viach.apps.dicing.game.Game
 import viach.apps.dicing.model.AIDifficulty
+import viach.apps.dicing.ui.theme.spacing
 import viach.apps.dicing.ui.view.component.*
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -114,7 +115,7 @@ fun GameScreen(
         sheetBackgroundColor = MaterialTheme.colors.background,
         sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
         sheetContent = {
-            VerticalSpacer(16.dp)
+            VerticalSpacer(MaterialTheme.spacing.l)
             Text(
                 stringResource(id = R.string.game_over),
                 textAlign = TextAlign.Center,
@@ -138,22 +139,22 @@ fun GameScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                if (game.gameOver) {
+                if (game.gameOver && game.wonPlayerPosition != null) {
                     Text(
                         text = stringResource(R.string.player_format_won_the_game, game.wonPlayerPosition!!),
-                        modifier = Modifier.padding(32.dp),
+                        modifier = Modifier.padding(MaterialTheme.spacing.xxl),
                         style = MaterialTheme.typography.body2
                     )
                     MaxWidthButton(
                         textRes = R.string.play_again,
                         onClick = { game = game.newGame }
                     )
-                    VerticalSpacer(16.dp)
+                    VerticalSpacer(MaterialTheme.spacing.l)
                     MaxWidthButton(
                         textRes = R.string.back_to_menu,
                         onClick = onBackToMenuIntent
                     )
-                    VerticalSpacer(16.dp)
+                    VerticalSpacer(MaterialTheme.spacing.l)
 
                     var showBoard by remember { mutableStateOf(false) }
 
@@ -272,15 +273,15 @@ private fun PortraitScreen(
             .fillMaxWidth()
             .verticalScroll(scrollState)
             .padding(paddingValues)
-            .padding(horizontal = 32.dp),
+            .padding(horizontal = MaterialTheme.spacing.xxl),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         GameBar(
             gameField = game.getGameField(2),
             rowCellsCount = 3,
             playerPosition = 2,
-            layoutPadding = PaddingValues(16.dp),
-            itemPadding = PaddingValues(8.dp),
+            layoutPadding = PaddingValues(MaterialTheme.spacing.l),
+            itemPadding = PaddingValues(MaterialTheme.spacing.m),
             itemsClickable = ai == null || !game.gameOver
         ) { position ->
             if (game.isPlayerMove(2)) {
@@ -297,8 +298,8 @@ private fun PortraitScreen(
         GameBar(
             gameField = game.getGameField(1),
             rowCellsCount = 3,
-            layoutPadding = PaddingValues(16.dp),
-            itemPadding = PaddingValues(8.dp),
+            layoutPadding = PaddingValues(MaterialTheme.spacing.l),
+            itemPadding = PaddingValues(MaterialTheme.spacing.m),
             playerPosition = 1,
             itemsClickable = !game.gameOver
         ) { position ->
@@ -337,7 +338,7 @@ private fun LandscapeScreen(
             .fillMaxWidth()
             .verticalScroll(scrollState)
             .padding(paddingValues)
-            .padding(horizontal = 32.dp),
+            .padding(horizontal = MaterialTheme.spacing.xxl),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -349,8 +350,8 @@ private fun LandscapeScreen(
                 GameBar(
                     gameField = game.getGameField(1),
                     rowCellsCount = 3,
-                    layoutPadding = PaddingValues(16.dp),
-                    itemPadding = PaddingValues(8.dp),
+                    layoutPadding = PaddingValues(MaterialTheme.spacing.l),
+                    itemPadding = PaddingValues(MaterialTheme.spacing.m),
                 ) { position ->
                     if (game.isPlayerMove(1)) {
                         val newGame = game.makeMove(position, 1).createNextDice()
@@ -368,7 +369,7 @@ private fun LandscapeScreen(
                     }
                 }
             }
-            HorizontalSpacer(16.dp)
+            HorizontalSpacer(MaterialTheme.spacing.l)
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -377,8 +378,8 @@ private fun LandscapeScreen(
                 GameBar(
                     gameField = game.getGameField(2),
                     rowCellsCount = 3,
-                    layoutPadding = PaddingValues(16.dp),
-                    itemPadding = PaddingValues(8.dp),
+                    layoutPadding = PaddingValues(MaterialTheme.spacing.l),
+                    itemPadding = PaddingValues(MaterialTheme.spacing.m),
                     itemsClickable = ai == null
                 ) { position ->
                     if (game.isPlayerMove(2)) {

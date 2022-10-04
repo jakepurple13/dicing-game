@@ -1,10 +1,7 @@
 package viach.apps.dicing.ui.view.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import viach.apps.dicing.R
 import viach.apps.dicing.model.AIDifficulty
+import viach.apps.dicing.ui.theme.spacing
 
 @Composable
 fun AIDifficultyDialog(
@@ -22,8 +20,13 @@ fun AIDifficultyDialog(
     onDismissIntent: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissIntent) {
-        Column(modifier = Modifier.background(MaterialTheme.colors.background)) {
-            Box(modifier = Modifier.background(MaterialTheme.colors.primary),) {
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .padding(bottom = MaterialTheme.spacing.l),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.l)
+        ) {
+            Box(modifier = Modifier.background(MaterialTheme.colors.primary)) {
                 Text(
                     text = stringResource(R.string.select_difficulty),
                     color = MaterialTheme.colors.onPrimary,
@@ -34,7 +37,6 @@ fun AIDifficultyDialog(
                     style = MaterialTheme.typography.body2
                 )
             }
-            VerticalSpacer(16.dp)
             MaxWidthButton(
                 textRes = R.string.easy,
                 onClick = {
@@ -42,7 +44,6 @@ fun AIDifficultyDialog(
                     onDismissIntent()
                 }
             )
-            VerticalSpacer(16.dp)
             MaxWidthButton(
                 textRes = R.string.normal,
                 onClick = {
@@ -50,7 +51,6 @@ fun AIDifficultyDialog(
                     onDismissIntent()
                 }
             )
-            VerticalSpacer(16.dp)
             MaxWidthButton(
                 textRes = R.string.hard,
                 onClick = {
@@ -58,7 +58,6 @@ fun AIDifficultyDialog(
                     onDismissIntent()
                 }
             )
-            VerticalSpacer(16.dp)
         }
     }
 }

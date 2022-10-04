@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -13,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import viach.apps.dicing.R
 import viach.apps.dicing.model.AIDifficulty
+import viach.apps.dicing.ui.theme.spacing
 import viach.apps.dicing.ui.view.component.AIDifficultyDialog
 import viach.apps.dicing.ui.view.component.HorizontalSpacer
 import viach.apps.dicing.ui.view.component.MaxWidthButton
@@ -50,28 +54,28 @@ fun MenuScreen(
                 tint = MaterialTheme.colors.primaryVariant,
                 modifier = Modifier.size(48.dp)
             )
-            HorizontalSpacer(16.dp)
+            HorizontalSpacer(MaterialTheme.spacing.l)
             Text(
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.h1
             )
         }
-        VerticalSpacer(32.dp)
+        VerticalSpacer(MaterialTheme.spacing.xxl)
         MaxWidthButton(
             textRes = R.string.play,
             onClick = { showAIDifficultyDialog = true }
         )
-        VerticalSpacer(16.dp)
+        VerticalSpacer(MaterialTheme.spacing.l)
         MaxWidthButton(
             textRes = R.string.two_players,
             onClick = onTwoPlayersOpenIntent
         )
-        VerticalSpacer(16.dp)
+        VerticalSpacer(MaterialTheme.spacing.l)
         MaxWidthButton(
             textRes = R.string.stats,
             onClick = onStatsOpenIntent
         )
-        VerticalSpacer(16.dp)
+        VerticalSpacer(MaterialTheme.spacing.l)
         MaxWidthButton(
             textRes = R.string.rules,
             onClick = onRulesOpenIntent

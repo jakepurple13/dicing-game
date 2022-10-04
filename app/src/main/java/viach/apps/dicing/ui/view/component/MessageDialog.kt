@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import viach.apps.dicing.R
+import viach.apps.dicing.ui.theme.spacing
 
 @Composable
 fun MessageDialog(
@@ -35,17 +36,17 @@ fun MessageDialog(
                     style = MaterialTheme.typography.body2
                 )
             }
-            VerticalSpacer(16.dp)
+            VerticalSpacer(MaterialTheme.spacing.l)
             Text(
                 text = message,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.l)
             )
-            VerticalSpacer(16.dp)
+            VerticalSpacer(MaterialTheme.spacing.l)
             MaxWidthButton(
                 textRes = R.string.okay,
                 onClick = onDismissIntent
             )
-            VerticalSpacer(16.dp)
+            VerticalSpacer(MaterialTheme.spacing.l)
         }
     }
 }

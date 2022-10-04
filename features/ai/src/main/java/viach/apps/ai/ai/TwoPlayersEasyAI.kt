@@ -2,6 +2,7 @@ package viach.apps.ai.ai
 
 import kotlinx.parcelize.Parcelize
 import viach.apps.dicing.game.Game
+import kotlin.random.Random
 
 @Parcelize
 class TwoPlayersEasyAI(
@@ -10,10 +11,10 @@ class TwoPlayersEasyAI(
     private val opponentPlayerPosition: Int
 ) : AI {
 
-    override fun makeMove(): AI {
+    override tailrec fun makeMove(): AI {
         val field = game.getGameField(ownPlayerPosition)
         if (field.gameOver) return this
-        val fieldPosition = IntRange(1, 9).random()
+        val fieldPosition = Random.nextInt(1, 9)
         if (field.isFree(fieldPosition)) {
             return TwoPlayersEasyAI(
                 game = game.makeMove(fieldPosition, ownPlayerPosition),

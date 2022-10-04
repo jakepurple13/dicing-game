@@ -11,15 +11,14 @@ class ProtoDataStoreStatsCache(
 ) : StatsCache {
 
     override val all: Flow<StatsPreferences>
-        get() = stats.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    exception.printStackTrace()
-                    emit(StatsPreferences.getDefaultInstance())
-                } else {
-                    throw exception
-                }
+        get() = stats.data.catch { exception ->
+            if (exception is IOException) {
+                exception.printStackTrace()
+                emit(StatsPreferences.getDefaultInstance())
+            } else {
+                throw exception
             }
+        }
 
     override fun addEasyWinLossPoint(win: Boolean): Job = stats.update {
         if (win) {
@@ -57,6 +56,5 @@ class ProtoDataStoreStatsCache(
         if (score > hardModeHighestScore) setHardModeHighestScore(score) else this
     }
 
-    override fun clear(): Job =
-        stats.update { clear() }
+    override fun clear(): Job = stats.update { clear() }
 }

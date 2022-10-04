@@ -24,7 +24,7 @@ class TwoPlayersHardAI(
             maxScore == it.getGameField(ownPlayerPosition).score
         }
         val minOpponentScoredGame = maxScoredGames.minBy { it.getGameField(opponentPlayerPosition).score }
-        return TwoPlayersNormalAI(
+        return TwoPlayersHardAI(
             game = minOpponentScoredGame,
             ownPlayerPosition = ownPlayerPosition,
             opponentPlayerPosition = opponentPlayerPosition

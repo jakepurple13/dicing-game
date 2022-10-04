@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 @Parcelize
 object RandomDiceFactory : DiceFactory {
-    override fun create(): Dice = when ((1..6).random(Random(System.currentTimeMillis()))) {
+    override fun create(): Dice = when (Random.nextInt(1, 6)) {
         1 -> OneDice
         2 -> TwoDice
         3 -> ThreeDice

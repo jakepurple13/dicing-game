@@ -235,7 +235,6 @@ fun GameScreen(
                     onGameChange = { game = it },
                     onAIChange = { ai = it },
                     onMessageChange = { message = it },
-                    onBackToMenuIntent = onBackToMenuIntent,
                     paddingValues = padding
                 )
             }
@@ -249,7 +248,6 @@ fun GameScreen(
                     onAIChange = { ai = it },
                     onGameChange = { game = it },
                     onMessageChange = { message = it },
-                    onBackToMenuIntent = onBackToMenuIntent,
                     paddingValues = padding
                 )
             }
@@ -268,7 +266,6 @@ private fun PortraitScreen(
     onGameChange: (Game) -> Unit,
     onAIChange: (AI) -> Unit,
     onMessageChange: (String?) -> Unit,
-    onBackToMenuIntent: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -284,7 +281,7 @@ private fun PortraitScreen(
             playerPosition = 2,
             layoutPadding = PaddingValues(16.dp),
             itemPadding = PaddingValues(8.dp),
-            itemsClickable = ai == null
+            itemsClickable = ai == null || !game.gameOver
         ) { position ->
             if (game.isPlayerMove(2)) {
                 onGameChange(game.makeMove(position, 2).createNextDice())
@@ -303,6 +300,7 @@ private fun PortraitScreen(
             layoutPadding = PaddingValues(16.dp),
             itemPadding = PaddingValues(8.dp),
             playerPosition = 1,
+            itemsClickable = !game.gameOver
         ) { position ->
             if (game.isPlayerMove(1)) {
                 val newGame = game.makeMove(position, 1).createNextDice()
@@ -332,7 +330,6 @@ private fun LandscapeScreen(
     onGameChange: (Game) -> Unit,
     onAIChange: (AI) -> Unit,
     onMessageChange: (String?) -> Unit,
-    onBackToMenuIntent: () -> Unit,
     paddingValues: PaddingValues
 ) {
     Column(

@@ -24,7 +24,7 @@ import viach.apps.dicing.ui.view.component.VerticalSpacer
 fun StatsScreen(
     stats: StatsCache
 ) {
-    val currentStats: StatsPreferences by stats.all.collectAsState(StatsPreferences.newBuilder().build())
+    val currentStats: StatsPreferences by stats.all.collectAsState(StatsPreferences.getDefaultInstance())
 
     Column(
         modifier = Modifier

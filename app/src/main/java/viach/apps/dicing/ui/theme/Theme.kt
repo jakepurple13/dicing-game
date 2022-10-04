@@ -11,7 +11,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-
+    primary = GoldPrimary,
+    primaryVariant = GoldPrimaryDark,
+    onPrimary = Color.Black,
+    secondary = GoldPrimary,
+    secondaryVariant = GoldPrimaryDark,
+    onSecondary = Color.Black,
+    background = BlueBackground,
+    onBackground = Color.White,
+    surface = BlueBackgroundDark,
+    onSurface = Color.White
 )
 
 private val LightColorPalette = lightColors(
@@ -33,7 +42,7 @@ fun DicingTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
         LocalThemeSpacing provides remember { Spacing() }
     ) {
         MaterialTheme(
-            colors = LightColorPalette,
+            colors = if (darkTheme) DarkColorPalette else LightColorPalette,
             typography = Typography,
             shapes = Shapes,
             content = content

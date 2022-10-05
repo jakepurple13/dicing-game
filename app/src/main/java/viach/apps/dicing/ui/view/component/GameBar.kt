@@ -62,8 +62,7 @@ fun GameBar(
                     val clickable = itemsClickable && gameField.isFree(position)
                     Crossfade(
                         targetState = dice,
-                        modifier = Modifier
-                            .padding(itemPadding)
+                        modifier = Modifier.padding(itemPadding)
                     ) { target ->
                         Icon(
                             painter = painterResource(target.iconRes),

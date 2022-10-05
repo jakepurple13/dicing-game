@@ -116,9 +116,9 @@ fun GameScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = animateDpAsState(if (game.gameOver) BottomSheetScaffoldDefaults.SheetPeekHeight else 0.dp).value,
-        sheetBackgroundColor = MaterialTheme.colors.background,
         sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
         sheetContent = {
+            Divider(thickness = MaterialTheme.spacing.m, color = MaterialTheme.colors.primaryVariant)
             VerticalSpacer(MaterialTheme.spacing.l)
             Text(
                 stringResource(id = R.string.game_over),
@@ -234,7 +234,6 @@ fun GameScreen(
                 PortraitScreen(
                     context = context,
                     coroutineScope = coroutineScope,
-                    scrollState = scrollState,
                     game = game,
                     ai = ai,
                     onGameChange = {
@@ -284,7 +283,6 @@ fun GameScreen(
 private fun PortraitScreen(
     context: Context,
     coroutineScope: CoroutineScope,
-    scrollState: ScrollState,
     game: Game,
     ai: AI?,
     paddingValues: PaddingValues,
@@ -294,11 +292,10 @@ private fun PortraitScreen(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState)
-            .padding(paddingValues)
-            .padding(horizontal = MaterialTheme.spacing.xxl),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .padding(paddingValues),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         GameBar(
             gameField = game.getGameField(2),

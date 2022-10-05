@@ -14,4 +14,13 @@ object RandomDiceFactory : DiceFactory {
         5 -> FiveDice
         else -> SixDice
     }
+
+    override fun diceFromValue(value: Int): Dice = when (value) {
+        1 -> OneDice
+        2 -> TwoDice
+        3 -> ThreeDice
+        4 -> FourDice
+        5 -> FiveDice
+        else -> SixDice
+    }
 }

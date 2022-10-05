@@ -2,8 +2,10 @@ package viach.apps.dicing.gamefield
 
 import android.os.Parcelable
 import viach.apps.dicing.dice.Dice
+import viach.apps.dicing.fieldcell.FieldCell
 
 interface GameField : Parcelable {
+    val cells: List<FieldCell>
     val gameOver: Boolean
     val score: Int
     val position: Int

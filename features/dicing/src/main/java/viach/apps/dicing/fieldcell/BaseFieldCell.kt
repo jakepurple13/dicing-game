@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 import viach.apps.dicing.dice.Dice
 
 @Parcelize
-internal open class BaseFieldCell(final override val dice: Dice) : FieldCell {
+open class BaseFieldCell(final override val dice: Dice) : FieldCell {
     @IgnoredOnParcel
     override val free: Boolean = dice.value <= 0
 }

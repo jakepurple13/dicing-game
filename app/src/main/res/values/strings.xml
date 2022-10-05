@@ -39,7 +39,7 @@
     <string name="player_location">Player %d</string>
     <string name="show_hide_board">Show/Hide Board</string>
     <string name="leaving">Leaving?</string>
-    <string name="leaving_prompt">Are you sure? You will lose your progress.</string>
+    <string name="leaving_prompt">Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="easy_high_score">Easy High Score</string>
     <string name="normal_high_score">Normal High Score</string>

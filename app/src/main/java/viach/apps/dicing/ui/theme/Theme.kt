@@ -74,7 +74,8 @@ fun DicingTheme(
     val context = LocalContext.current
 
     val isDarkTheme = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ||
-            (isSystemInDarkTheme() && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            (darkTheme && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
     CompositionLocalProvider(
         LocalThemeSpacing provides remember { Spacing() },
         LocalActivity provides remember { context.findActivity() }

@@ -15,3 +15,12 @@ message StatsPreferences {
   int32 normalModeHighestScore = 8;
   int32 hardModeHighestScore = 9;
 }
+
+message SavedGame {
+  repeated int32 playerOneField = 1;
+  repeated int32 playerTwoField = 2;
+  string aiDifficulty = 3;
+  bool hasSavedGame = 4;
+  int32 turn = 5;
+  int32 nextDice = 6;
+}

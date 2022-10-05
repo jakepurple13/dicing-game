@@ -8,9 +8,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import viach.apps.cache.SavedGame
+import viach.apps.cache.extensions.savedGames
 import viach.apps.cache.extensions.settingPreferences
 
 class SettingsCacheImpl(
@@ -37,5 +41,77 @@ class SettingsCacheImpl(
     companion object {
         private val THEME_KEY = intPreferencesKey("theme")
         private val USE_DIFFICULTY_DIALOG = booleanPreferencesKey("use_difficulty_dialog")
+    }
+}
+
+class SavedGameCacheImpl(
+    context: Context,
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+) : SavedGameCache {
+    private val preferences: DataStore<SavedGame> = context.savedGames
+
+    override val all: Flow<SavedGame> get() = preferences.data
+    override var currentData: SavedGame = SavedGame.getDefaultInstance()
+
+    init {
+        coroutineScope.launch {
+            all.collectLatest { data ->
+                currentData = data
+            }
+        }
+    }
+
+    override fun update(statsBuilder: suspend SavedGame.Builder.() -> SavedGame.Builder): Job = coroutineScope.launch {
+        preferences.updateData { statsBuilder(it.toBuilder()).build() }
+    }
+
+    override var playerOneField: List<Int>
+        get() = currentData.playerOneFieldList
+        set(value) {
+            update {
+                clearPlayerOneField()
+                addAllPlayerOneField(value)
+            }
+        }
+
+    override var playerTwoField: List<Int>
+        get() = currentData.playerTwoFieldList
+        set(value) {
+            update {
+                clearPlayerTwoField()
+                addAllPlayerTwoField(value)
+            }
+        }
+
+    override var difficulty: String
+        get() = currentData.aiDifficulty
+        set(value) {
+            update { setAiDifficulty(value) }
+        }
+
+    override var savedGame: Boolean
+        get() = currentData.hasSavedGame
+        set(value) {
+            update { setHasSavedGame(value) }
+        }
+
+    override var turn: Int
+        get() = currentData.turn
+        set(value) {
+            update { setTurn(value) }
+        }
+
+    override var nextDice: Int
+        get() = currentData.nextDice
+        set(value) {
+            update { setNextDice(value) }
+        }
+
+    override fun hasSavedGame() = all.map { it.hasSavedGame }
+
+    override fun clearGame() {
+        update {
+            clear()
+        }
     }
 }

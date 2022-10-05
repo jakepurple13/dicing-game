@@ -27,8 +27,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import viach.apps.ai.ai.AI
+import viach.apps.cache.settings.SavedGameCache
 import viach.apps.cache.status.StatsCache
 import viach.apps.dicing.R
+import viach.apps.dicing.dicefactory.RandomDiceFactory
 import viach.apps.dicing.game.Game
 import viach.apps.dicing.model.AIDifficulty
 import viach.apps.dicing.ui.theme.spacing
@@ -40,6 +42,7 @@ import viach.apps.dicing.ui.view.component.*
 @Composable
 fun GameScreen(
     game: Game,
+    savedGameCache: SavedGameCache,
     stats: StatsCache,
     ai: AI? = null,
     difficulty: AIDifficulty? = null,
@@ -103,6 +106,7 @@ fun GameScreen(
                     }
                     null -> {}
                 }
+                savedGameCache.savedGame = false
                 scaffoldState.bottomSheetState.expand()
                 scoreNotUpdated = false
             }
@@ -233,7 +237,17 @@ fun GameScreen(
                     scrollState = scrollState,
                     game = game,
                     ai = ai,
-                    onGameChange = { game = it },
+                    onGameChange = {
+                        game = it
+                        if (ai != null) {
+                            savedGameCache.playerOneField = it.getGameField(1).cells.map { f -> f.dice.value }
+                            savedGameCache.playerTwoField = it.getGameField(2).cells.map { f -> f.dice.value }
+                            savedGameCache.savedGame = true
+                            savedGameCache.difficulty = difficulty?.name ?: "EASY"
+                            savedGameCache.turn = if (it.isPlayerMove(1)) 1 else 2
+                            savedGameCache.nextDice = (it.nextDice ?: RandomDiceFactory.create()).value
+                        }
+                    },
                     onAIChange = { ai = it },
                     onMessageChange = { message = it },
                     paddingValues = padding
@@ -247,7 +261,17 @@ fun GameScreen(
                     game = game,
                     ai = ai,
                     onAIChange = { ai = it },
-                    onGameChange = { game = it },
+                    onGameChange = {
+                        game = it
+                        if (ai != null) {
+                            savedGameCache.playerOneField = it.getGameField(1).cells.map { f -> f.dice.value }
+                            savedGameCache.playerTwoField = it.getGameField(2).cells.map { f -> f.dice.value }
+                            savedGameCache.savedGame = true
+                            savedGameCache.difficulty = difficulty?.name ?: "EASY"
+                            savedGameCache.turn = if (it.isPlayerMove(1)) 1 else 2
+                            savedGameCache.nextDice = (it.nextDice ?: RandomDiceFactory.create()).value
+                        }
+                    },
                     onMessageChange = { message = it },
                     paddingValues = padding
                 )

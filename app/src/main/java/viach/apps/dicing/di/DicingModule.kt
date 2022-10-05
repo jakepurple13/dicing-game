@@ -2,6 +2,8 @@ package viach.apps.dicing.di
 
 import org.koin.dsl.module
 import viach.apps.dicing.dicefactory.RandomDiceFactory
+import viach.apps.dicing.fieldcell.BaseFieldCell
+import viach.apps.dicing.fieldcell.EmptyFieldCell
 import viach.apps.dicing.game.Game
 import viach.apps.dicing.game.TwoPlayersGame
 import viach.apps.dicing.gamefield.SquareNineCellsGameField
@@ -30,3 +32,39 @@ private fun createTwoPlayersGame(playerPositionMove: Int): TwoPlayersGame =
         ),
         playerPositionMove = playerPositionMove
     )
+
+fun createGameFromSavedData(
+    playerPositionMove: Int,
+    playerOneField: List<Int>,
+    playerTwoField: List<Int>,
+    nextDice: Int? = null
+): TwoPlayersGame {
+
+    return TwoPlayersGame(
+        diceFactory = RandomDiceFactory,
+        initialNextDice = nextDice?.let { RandomDiceFactory.diceFromValue(it) } ?: RandomDiceFactory.create(),
+        initialFields = listOf(
+            SquareNineCellsGameField.newInstance(
+                player = FirstPlayer(),
+                cells = playerOneField.map {
+                    if (it == 0) {
+                        EmptyFieldCell
+                    } else {
+                        BaseFieldCell(RandomDiceFactory.diceFromValue(it))
+                    }
+                }
+            ),
+            SquareNineCellsGameField.newInstance(
+                player = SecondPlayer(),
+                cells = playerTwoField.map {
+                    if (it == 0) {
+                        EmptyFieldCell
+                    } else {
+                        BaseFieldCell(RandomDiceFactory.diceFromValue(it))
+                    }
+                }
+            )
+        ),
+        playerPositionMove = playerPositionMove
+    )
+}

@@ -4,5 +4,6 @@ import android.os.Parcelable
 import viach.apps.dicing.dice.Dice
 
 interface DiceFactory : Parcelable {
-    fun create() : Dice
+    fun create(): Dice
+    fun diceFromValue(value: Int): Dice
 }

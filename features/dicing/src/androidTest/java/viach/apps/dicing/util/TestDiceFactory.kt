@@ -7,4 +7,5 @@ import viach.apps.dicing.dicefactory.DiceFactory
 @Parcelize
 class TestDiceFactory(private val dice: Dice) : DiceFactory {
     override fun create(): Dice = dice
+    override fun diceFromValue(value: Int): Dice = dice
 }

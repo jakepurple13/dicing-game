@@ -3,6 +3,7 @@ package viach.apps.ai.util
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import viach.apps.dicing.dice.Dice
+import viach.apps.dicing.fieldcell.FieldCell
 import viach.apps.dicing.gamefield.GameField
 import viach.apps.dicing.gamefield.SquareNineCellsGameField
 import viach.apps.dicing.player.Player
@@ -10,6 +11,7 @@ import viach.apps.dicing.player.Player
 @Parcelize
 class TestGameField(
     private val player: Player,
+    override val cells: List<FieldCell> = emptyList(),
     val onDicesCountChanged: (Int) -> Unit
 ) : GameField {
     @IgnoredOnParcel

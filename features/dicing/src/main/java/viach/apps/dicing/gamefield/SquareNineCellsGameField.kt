@@ -1,16 +1,16 @@
 package viach.apps.dicing.gamefield
 
 import kotlinx.parcelize.Parcelize
-import viach.apps.dicing.player.Player
 import viach.apps.dicing.dice.Dice
 import viach.apps.dicing.fieldcell.BaseFieldCell
 import viach.apps.dicing.fieldcell.EmptyFieldCell
 import viach.apps.dicing.fieldcell.FieldCell
+import viach.apps.dicing.player.Player
 
 @Parcelize
 class SquareNineCellsGameField private constructor(
     private val player: Player,
-    private val cells: List<FieldCell> = List(9) { EmptyFieldCell }
+    override val cells: List<FieldCell> = List(9) { EmptyFieldCell }
 ) : GameField {
 
     override val position: Int get() = player.position

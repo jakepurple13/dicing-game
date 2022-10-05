@@ -24,11 +24,8 @@ fun MaxWidthButton(
             .fillMaxWidth()
             .padding(padding),
         onClick = onClick
-    ) {
-        Text(text = text)
-    }
+    ) { Text(text = text) }
 }
-
 
 @Composable
 fun MaxWidthButton(
@@ -44,28 +41,29 @@ fun MaxWidthButton(
 @Composable
 fun ReverseMaxWidthButton(
     text: String,
+    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(start = MaterialTheme.spacing.xxl),
     onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(padding),
         onClick = onClick,
         shape = CutCornerShape(topStart = MaterialTheme.spacing.xl, bottomStart = MaterialTheme.spacing.xl)
-    ) {
-        Text(text = text)
-    }
+    ) { Text(text = text) }
 }
 
 
 @Composable
 fun ReverseMaxWidthButton(
     @StringRes textRes: Int,
+    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(start = MaterialTheme.spacing.xxl),
     onClick: () -> Unit
 ) = ReverseMaxWidthButton(
     text = stringResource(textRes),
+    modifier = modifier,
     padding = padding,
     onClick = onClick
 )

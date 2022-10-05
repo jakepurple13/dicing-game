@@ -4,4 +4,4 @@ import kotlinx.parcelize.Parcelize
 import viach.apps.dicing.dice.EmptyDice
 
 @Parcelize
-internal object EmptyFieldCell : BaseFieldCell(EmptyDice)
+object EmptyFieldCell : BaseFieldCell(EmptyDice)

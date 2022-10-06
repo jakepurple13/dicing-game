@@ -1,16 +1,21 @@
 package viach.apps.cache.settings
 
-import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import viach.apps.cache.SavedGame
+import viach.apps.cache.SettingsPreferences
+import viach.apps.cache.SystemThemeMode
 
 interface SettingsCache {
-    val all: Flow<Preferences>
+    var currentData: SettingsPreferences
+    val all: Flow<SettingsPreferences>
     val theme: Flow<Int>
     fun setTheme(themeIndex: Int)
     val useDifficultyDialog: Flow<Boolean>
     fun setUseDifficultyDialog(useDialog: Boolean)
+    fun update(statsBuilder: suspend SettingsPreferences.Builder.() -> SettingsPreferences.Builder): Job
+    val themeMode: Flow<SystemThemeMode>
+    fun setThemeMode(mode: SystemThemeMode)
 }
 
 interface SavedGameCache {

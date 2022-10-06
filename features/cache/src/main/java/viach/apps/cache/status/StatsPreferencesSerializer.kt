@@ -6,6 +6,7 @@ import com.google.protobuf.InvalidProtocolBufferException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import viach.apps.cache.SavedGame
+import viach.apps.cache.SettingsPreferences
 import viach.apps.cache.StatsPreferences
 import java.io.InputStream
 import java.io.OutputStream
@@ -43,6 +44,25 @@ object SavedGameSerializer : Serializer<SavedGame> {
         }
 
     override suspend fun writeTo(t: SavedGame, output: OutputStream) =
+        withContext(Dispatchers.IO) {
+            t.writeTo(output)
+        }
+}
+
+object SettingsPreferencesSerializer : Serializer<SettingsPreferences> {
+    override val defaultValue: SettingsPreferences
+        get() = SettingsPreferences.getDefaultInstance()
+
+    override suspend fun readFrom(input: InputStream): SettingsPreferences =
+        withContext(Dispatchers.IO) {
+            try {
+                SettingsPreferences.parseFrom(input)
+            } catch (exception: InvalidProtocolBufferException) {
+                throw CorruptionException("Cannot read proto.", exception)
+            }
+        }
+
+    override suspend fun writeTo(t: SettingsPreferences, output: OutputStream) =
         withContext(Dispatchers.IO) {
             t.writeTo(output)
         }

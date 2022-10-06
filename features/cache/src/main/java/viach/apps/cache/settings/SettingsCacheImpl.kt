@@ -2,10 +2,6 @@ package viach.apps.cache.settings
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,33 +10,48 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import viach.apps.cache.SavedGame
+import viach.apps.cache.SettingsPreferences
+import viach.apps.cache.SystemThemeMode
 import viach.apps.cache.extensions.savedGames
-import viach.apps.cache.extensions.settingPreferences
+import viach.apps.cache.extensions.settingsPreferences
 
 class SettingsCacheImpl(
     context: Context,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : SettingsCache {
-    private val preferences: DataStore<Preferences> = context.settingPreferences
+    private val preferences: DataStore<SettingsPreferences> = context.settingsPreferences
+    override val all: Flow<SettingsPreferences> get() = preferences.data
+    override var currentData: SettingsPreferences = SettingsPreferences.getDefaultInstance()
 
-    override val all: Flow<Preferences> get() = preferences.data
+    init {
+        coroutineScope.launch {
+            all.collectLatest { data ->
+                currentData = data
+            }
+        }
+    }
 
-    override val theme: Flow<Int> get() = preferences.data.map { it[THEME_KEY] ?: 0 }
+    override val theme: Flow<Int> get() = all.map { it.themeIndex }
 
     override fun setTheme(themeIndex: Int) {
-        coroutineScope.launch { preferences.edit { it[THEME_KEY] = themeIndex } }
+        update { setThemeIndex(themeIndex) }
     }
 
-    override val useDifficultyDialog: Flow<Boolean>
-        get() = preferences.data.map { it[USE_DIFFICULTY_DIALOG] ?: false }
+    override val useDifficultyDialog: Flow<Boolean> get() = all.map { it.useDifficultyDialog }
 
     override fun setUseDifficultyDialog(useDialog: Boolean) {
-        coroutineScope.launch { preferences.edit { it[USE_DIFFICULTY_DIALOG] = useDialog } }
+        update { setUseDifficultyDialog(useDialog) }
     }
 
-    companion object {
-        private val THEME_KEY = intPreferencesKey("theme")
-        private val USE_DIFFICULTY_DIALOG = booleanPreferencesKey("use_difficulty_dialog")
+    override fun update(statsBuilder: suspend SettingsPreferences.Builder.() -> SettingsPreferences.Builder): Job =
+        coroutineScope.launch {
+            preferences.updateData { statsBuilder(it.toBuilder()).build() }
+        }
+
+    override val themeMode: Flow<SystemThemeMode> get() = all.map { it.mode }
+
+    override fun setThemeMode(mode: SystemThemeMode) {
+        update { setMode(mode) }
     }
 }
 

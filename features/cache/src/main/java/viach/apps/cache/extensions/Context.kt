@@ -3,11 +3,11 @@ package viach.apps.cache.extensions
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import viach.apps.cache.SavedGame
+import viach.apps.cache.SettingsPreferences
 import viach.apps.cache.StatsPreferences
 import viach.apps.cache.status.SavedGameSerializer
+import viach.apps.cache.status.SettingsPreferencesSerializer
 import viach.apps.cache.status.StatsPreferencesSerializer
 
 internal val Context.preferences: DataStore<StatsPreferences> by dataStore(
@@ -15,7 +15,10 @@ internal val Context.preferences: DataStore<StatsPreferences> by dataStore(
     serializer = StatsPreferencesSerializer
 )
 
-val Context.settingPreferences: DataStore<Preferences> by preferencesDataStore(name = "StatsSettings")
+val Context.settingsPreferences: DataStore<SettingsPreferences> by dataStore(
+    fileName = "StatsSettings",
+    serializer = SettingsPreferencesSerializer
+)
 
 internal val Context.savedGames: DataStore<SavedGame> by dataStore(
     fileName = "SavedGame",

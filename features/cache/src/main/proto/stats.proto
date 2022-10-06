@@ -24,3 +24,15 @@ message SavedGame {
   int32 turn = 5;
   int32 nextDice = 6;
 }
+
+message SettingsPreferences {
+  SystemThemeMode mode = 1;
+  bool useDifficultyDialog = 2;
+  int32 themeIndex = 3;
+}
+
+enum SystemThemeMode {
+  FollowSystem = 0;
+  Day = 1;
+  Night = 2;
+}

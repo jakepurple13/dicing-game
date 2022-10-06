@@ -1,6 +1,5 @@
 package viach.apps.dicing.ui.view.screen
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -15,9 +14,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import viach.apps.cache.SystemThemeMode
 import viach.apps.cache.settings.SettingsCache
 import viach.apps.dicing.R
-import viach.apps.dicing.ui.theme.LocalActivity
 import viach.apps.dicing.ui.theme.Theme
 import viach.apps.dicing.ui.theme.spacing
 import viach.apps.dicing.ui.view.component.VerticalSpacer
@@ -69,21 +68,9 @@ fun SettingsScreen(settingsCache: SettingsCache) {
                 var showModeDialog by remember { mutableStateOf(false) }
 
                 Column {
-                    val state = when (AppCompatDelegate.getDefaultNightMode()) {
-                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> ThemeMode.FollowSystem
-                        AppCompatDelegate.MODE_NIGHT_NO -> ThemeMode.Day
-                        AppCompatDelegate.MODE_NIGHT_YES -> ThemeMode.Night
-                        else -> ThemeMode.FollowSystem
-                    }
-
-                    val activity = LocalActivity.current
+                    val state by settingsCache.themeMode.collectAsState(SystemThemeMode.FollowSystem)
 
                     if (showModeDialog) {
-                        fun changeMode(mode: ThemeMode) {
-                            AppCompatDelegate.setDefaultNightMode(mode.id)
-                            activity.recreate()
-                        }
-
                         AlertDialog(
                             onDismissRequest = { showModeDialog = false },
                             title = { Text("Select Theme Mode") },
@@ -91,34 +78,34 @@ fun SettingsScreen(settingsCache: SettingsCache) {
                                 Column {
                                     Spacer(Modifier.height(MaterialTheme.spacing.s))
                                     ListItem(
-                                        modifier = Modifier.clickable { changeMode(ThemeMode.Day) },
+                                        modifier = Modifier.clickable { settingsCache.setThemeMode(SystemThemeMode.Day) },
                                         text = { Text("Day") },
                                         icon = {
                                             RadioButton(
-                                                selected = state == ThemeMode.Day,
-                                                onClick = { changeMode(ThemeMode.Day) }
+                                                selected = state == SystemThemeMode.Day,
+                                                onClick = { settingsCache.setThemeMode(SystemThemeMode.Day) }
                                             )
                                         }
                                     )
 
                                     ListItem(
-                                        modifier = Modifier.clickable { changeMode(ThemeMode.Night) },
+                                        modifier = Modifier.clickable { settingsCache.setThemeMode(SystemThemeMode.Night) },
                                         text = { Text("Night") },
                                         icon = {
                                             RadioButton(
-                                                selected = state == ThemeMode.Night,
-                                                onClick = { changeMode(ThemeMode.Night) }
+                                                selected = state == SystemThemeMode.Night,
+                                                onClick = { settingsCache.setThemeMode(SystemThemeMode.Night) }
                                             )
                                         }
                                     )
 
                                     ListItem(
-                                        modifier = Modifier.clickable { changeMode(ThemeMode.FollowSystem) },
+                                        modifier = Modifier.clickable { settingsCache.setThemeMode(SystemThemeMode.FollowSystem) },
                                         text = { Text("Follow System") },
                                         icon = {
                                             RadioButton(
-                                                selected = state == ThemeMode.FollowSystem,
-                                                onClick = { changeMode(ThemeMode.FollowSystem) }
+                                                selected = state == SystemThemeMode.FollowSystem,
+                                                onClick = { settingsCache.setThemeMode(SystemThemeMode.FollowSystem) }
                                             )
                                         }
                                     )
@@ -159,10 +146,4 @@ fun SettingsScreen(settingsCache: SettingsCache) {
             }
         }
     }
-}
-
-enum class ThemeMode(val id: Int) {
-    Day(AppCompatDelegate.MODE_NIGHT_NO),
-    Night(AppCompatDelegate.MODE_NIGHT_YES),
-    FollowSystem(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 }

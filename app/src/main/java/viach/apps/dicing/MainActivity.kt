@@ -1,8 +1,9 @@
 package viach.apps.dicing
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -10,17 +11,21 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
+import viach.apps.cache.SystemThemeMode
 import viach.apps.cache.settings.SettingsCache
 import viach.apps.dicing.ui.theme.DicingTheme
 import viach.apps.dicing.ui.theme.Theme
 import viach.apps.dicing.ui.view.screen.MainScreen
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val settingsCache: SettingsCache by inject()
 
@@ -30,6 +35,19 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        settingsCache.themeMode
+            .map {
+                when (it) {
+                    SystemThemeMode.Day -> AppCompatDelegate.MODE_NIGHT_NO
+                    SystemThemeMode.Night -> AppCompatDelegate.MODE_NIGHT_YES
+                    SystemThemeMode.FollowSystem -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                    SystemThemeMode.UNRECOGNIZED -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
+            }
+            .onEach { AppCompatDelegate.setDefaultNightMode(it) }
+            .launchIn(lifecycleScope)
+
         setContent {
             val defaultTheme = remember {
                 runBlocking {

@@ -1,17 +1,16 @@
 package viach.apps.dicing.ui.theme
 
-import android.content.Context
-import android.content.ContextWrapper
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorPalette = darkColors(
     primary = GoldPrimary,
@@ -71,14 +70,11 @@ fun DicingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val context = LocalContext.current
-
     val isDarkTheme = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ||
             (darkTheme && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
     CompositionLocalProvider(
-        LocalThemeSpacing provides remember { Spacing() },
-        LocalActivity provides remember { context.findActivity() }
+        LocalThemeSpacing provides remember { Spacing() }
     ) {
         MaterialTheme(
             colors = theme.getTheme(isDarkTheme),
@@ -87,19 +83,6 @@ fun DicingTheme(
             content = content
         )
     }
-}
-
-val LocalActivity = staticCompositionLocalOf<ComponentActivity> { error("Context is not an Activity.") }
-
-fun Context.findActivity(): ComponentActivity {
-    var currentContext = this
-    while (currentContext is ContextWrapper) {
-        if (currentContext is ComponentActivity) {
-            return currentContext
-        }
-        currentContext = currentContext.baseContext
-    }
-    error("Context is not an Activity.")
 }
 
 @Suppress("unused")

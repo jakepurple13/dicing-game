@@ -8,7 +8,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,6 +21,8 @@ import viach.apps.cache.settings.SettingsCache
 import viach.apps.dicing.R
 import viach.apps.dicing.ui.theme.Theme
 import viach.apps.dicing.ui.theme.spacing
+import viach.apps.dicing.ui.view.component.GroupButton
+import viach.apps.dicing.ui.view.component.GroupButtonModel
 import viach.apps.dicing.ui.view.component.VerticalSpacer
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -64,68 +68,32 @@ fun SettingsScreen(settingsCache: SettingsCache) {
 
                 Divider()
 
-                val currentTheme by settingsCache.theme.collectAsState(0)
-                var showModeDialog by remember { mutableStateOf(false) }
-
                 Column {
+                    val currentTheme by settingsCache.theme.collectAsState(0)
                     val state by settingsCache.themeMode.collectAsState(SystemThemeMode.FollowSystem)
 
-                    if (showModeDialog) {
-                        AlertDialog(
-                            onDismissRequest = { showModeDialog = false },
-                            title = { Text("Select Theme Mode") },
-                            text = {
-                                Column {
-                                    Spacer(Modifier.height(MaterialTheme.spacing.s))
-                                    ListItem(
-                                        modifier = Modifier.clickable { settingsCache.setThemeMode(SystemThemeMode.Day) },
-                                        text = { Text("Day") },
-                                        icon = {
-                                            RadioButton(
-                                                selected = state == SystemThemeMode.Day,
-                                                onClick = { settingsCache.setThemeMode(SystemThemeMode.Day) }
-                                            )
-                                        }
-                                    )
-
-                                    ListItem(
-                                        modifier = Modifier.clickable { settingsCache.setThemeMode(SystemThemeMode.Night) },
-                                        text = { Text("Night") },
-                                        icon = {
-                                            RadioButton(
-                                                selected = state == SystemThemeMode.Night,
-                                                onClick = { settingsCache.setThemeMode(SystemThemeMode.Night) }
-                                            )
-                                        }
-                                    )
-
-                                    ListItem(
-                                        modifier = Modifier.clickable { settingsCache.setThemeMode(SystemThemeMode.FollowSystem) },
-                                        text = { Text("Follow System") },
-                                        icon = {
-                                            RadioButton(
-                                                selected = state == SystemThemeMode.FollowSystem,
-                                                onClick = { settingsCache.setThemeMode(SystemThemeMode.FollowSystem) }
-                                            )
-                                        }
-                                    )
-                                }
-                            },
-                            confirmButton = { TextButton(onClick = { showModeDialog = false }) { Text("Done") } }
-                        )
-                    }
-
                     ListItem(
-                        modifier = Modifier.clickable { showModeDialog = true },
                         text = { Text("Select Theme Mode") },
-                        trailing = { Text(state.name) }
+                        trailing = {
+                            GroupButton(
+                                selected = state,
+                                options = listOf(
+                                    GroupButtonModel(SystemThemeMode.Day) { Text("Day") },
+                                    GroupButtonModel(SystemThemeMode.Night) { Text("Night") },
+                                    GroupButtonModel(SystemThemeMode.FollowSystem) { Text("Follow System") },
+                                ),
+                                onClick = settingsCache::setThemeMode
+                            )
+                        }
                     )
 
                     ListItem(text = { Text("Select Theme") })
 
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.s),
-                        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.m)
+                        modifier = Modifier
+                            .padding(horizontal = MaterialTheme.spacing.m)
+                            .padding(start = MaterialTheme.spacing.l)
                     ) {
                         items(Theme.values()) { theme ->
                             Box(
@@ -143,6 +111,7 @@ fun SettingsScreen(settingsCache: SettingsCache) {
                         }
                     }
                 }
+                Divider()
             }
         }
     }

@@ -1,6 +1,6 @@
 package viach.apps.dicing.ui.theme
 
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
@@ -70,14 +70,27 @@ fun DicingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val isDarkTheme = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ||
-            (darkTheme && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-
     CompositionLocalProvider(
         LocalThemeSpacing provides remember { Spacing() }
     ) {
         MaterialTheme(
-            colors = theme.getTheme(isDarkTheme),
+            colors = theme.getTheme(darkTheme).let { colors ->
+                colors.copy(
+                    primary = animateColorAsState(colors.primary).value,
+                    primaryVariant = animateColorAsState(colors.primaryVariant).value,
+                    onPrimary = animateColorAsState(colors.onPrimary).value,
+                    secondary = animateColorAsState(colors.secondary).value,
+                    secondaryVariant = animateColorAsState(colors.secondaryVariant).value,
+                    onSecondary = animateColorAsState(colors.onSecondary).value,
+                    background = animateColorAsState(colors.background).value,
+                    onBackground = animateColorAsState(colors.onBackground).value,
+                    surface = animateColorAsState(colors.surface).value,
+                    onSurface = animateColorAsState(colors.onSurface).value,
+                    onError = animateColorAsState(colors.onError).value,
+                    error = animateColorAsState(colors.error).value,
+                    isLight = colors.isLight
+                )
+            },
             typography = Typography,
             shapes = Shapes,
             content = content

@@ -91,7 +91,7 @@ fun SettingsScreen(settingsCache: SettingsCache) {
 
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.s),
-                        contentPadding = PaddingValues(start = MaterialTheme.spacing.l, end = MaterialTheme.spacing.m)
+                        contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.l)
                     ) {
                         items(Theme.values()) { theme ->
                             Box(

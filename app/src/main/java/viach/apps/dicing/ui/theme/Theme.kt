@@ -144,6 +144,20 @@ enum class Theme(private val light: Colors = LightColorPalette, private val dark
             surface = Color(0xff564419)
         )
     ),
+    DarkBlue(
+        createLightColors(
+            first = Color(0xff005db6),
+            second = Color(0xff555f71),
+            background = Color(0xffd6e3ff),
+            surface = Color(0xffd9e3f9)
+        ),
+        createDarkColors(
+            first = Color(0xffa9c7ff),
+            second = Color(0xffbdc7dc),
+            background = Color(0xff00468b),
+            surface = Color(0xff3e4758)
+        )
+    ),
     Green(
         createLightColors(
             first = Color(0xff006c48),

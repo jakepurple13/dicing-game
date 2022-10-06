@@ -104,6 +104,19 @@ val MaterialTheme.spacing: Spacing
     @ReadOnlyComposable
     get() = LocalThemeSpacing.current
 
+/**
+ * I've been using [material theme builder](https://m3.material.io/theme-builder#/custom) and setting:
+ * ```
+ * First == Primary
+ *
+ * Background == PrimaryContainer
+ *
+ * Second == Secondary
+ *
+ * Surface == SecondaryContainer
+ * ```
+ * for both light and dark themes
+ */
 enum class Theme(private val light: Colors = LightColorPalette, private val dark: Colors = DarkColorPalette) {
     Default(LightColorPalette, LightColorPalette),
     Blue(DarkColorPalette, DarkColorPalette),
@@ -129,6 +142,20 @@ enum class Theme(private val light: Colors = LightColorPalette, private val dark
             second = Color(0xffdec38c),
             background = Color(0xff930001),
             surface = Color(0xff564419)
+        )
+    ),
+    Green(
+        createLightColors(
+            first = Color(0xff006c48),
+            second = Color(0xff4d6356),
+            background = Color(0xff8df7c2),
+            surface = Color(0xffd0e8d8)
+        ),
+        createDarkColors(
+            first = Color(0xff71dba7),
+            second = Color(0xffb4ccbc),
+            background = Color(0xff005235),
+            surface = Color(0xff364b3f)
         )
     );
 

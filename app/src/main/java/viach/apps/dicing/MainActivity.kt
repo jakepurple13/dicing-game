@@ -36,7 +36,10 @@ class MainActivity : ComponentActivity() {
                     Theme.values().find { it.ordinal == (settingsCache.theme.firstOrNull() ?: 0) } ?: Theme.Default
                 }
             }
-            val darkTheme by settingsCache.themeMode.collectAsState(initial = SystemThemeMode.FollowSystem)
+            val defaultMode = remember {
+                runBlocking { settingsCache.themeMode.firstOrNull() ?: SystemThemeMode.FollowSystem }
+            }
+            val darkTheme by settingsCache.themeMode.collectAsState(defaultMode)
             val isSystemInDarkMode = isSystemInDarkTheme()
             val isDarkTheme by remember {
                 derivedStateOf {
@@ -51,16 +54,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    // Remember a SystemUiController
                     val systemUiController = rememberSystemUiController()
-
                     val background = MaterialTheme.colors.background
-
                     DisposableEffect(systemUiController, background) {
-                        // Update all of the system bar colors to be transparent, and use
-                        // dark icons if we're in light theme
                         systemUiController.setSystemBarsColor(color = background)
-                        // setStatusBarColor() and setNavigationBarColor() also exist
                         onDispose {}
                     }
                     MainScreen()

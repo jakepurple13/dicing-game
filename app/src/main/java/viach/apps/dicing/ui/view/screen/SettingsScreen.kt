@@ -111,16 +111,6 @@ fun SettingsScreen(settingsCache: SettingsCache) {
                                 theme
                                     .getTheme(!MaterialTheme.colors.isLight)
                                     .let { c ->
-                                        @Composable
-                                        fun ColorBox(color: Color) {
-                                            Box(
-                                                Modifier
-                                                    .background(color)
-                                                    .fillMaxWidth()
-                                                    .height(40.dp)
-                                            )
-                                        }
-
                                         ColorBox(color = c.background.animate().value)
                                         ColorBox(color = c.primary.animate().value)
                                         ColorBox(color = c.surface.animate().value)
@@ -134,4 +124,14 @@ fun SettingsScreen(settingsCache: SettingsCache) {
             }
         }
     }
+}
+
+@Composable
+fun ColorBox(color: Color) {
+    Box(
+        Modifier
+            .background(color)
+            .fillMaxWidth()
+            .height(40.dp)
+    )
 }

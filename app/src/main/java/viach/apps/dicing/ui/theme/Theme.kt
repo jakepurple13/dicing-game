@@ -1,6 +1,5 @@
 package viach.apps.dicing.ui.theme
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
@@ -76,18 +75,18 @@ fun DicingTheme(
         MaterialTheme(
             colors = theme.getTheme(darkTheme).let { colors ->
                 colors.copy(
-                    primary = animateColorAsState(colors.primary).value,
-                    primaryVariant = animateColorAsState(colors.primaryVariant).value,
-                    onPrimary = animateColorAsState(colors.onPrimary).value,
-                    secondary = animateColorAsState(colors.secondary).value,
-                    secondaryVariant = animateColorAsState(colors.secondaryVariant).value,
-                    onSecondary = animateColorAsState(colors.onSecondary).value,
-                    background = animateColorAsState(colors.background).value,
-                    onBackground = animateColorAsState(colors.onBackground).value,
-                    surface = animateColorAsState(colors.surface).value,
-                    onSurface = animateColorAsState(colors.onSurface).value,
-                    onError = animateColorAsState(colors.onError).value,
-                    error = animateColorAsState(colors.error).value,
+                    primary = colors.primary.animate().value,
+                    primaryVariant = colors.primaryVariant.animate().value,
+                    onPrimary = colors.onPrimary.animate().value,
+                    secondary = colors.secondary.animate().value,
+                    secondaryVariant = colors.secondaryVariant.animate().value,
+                    onSecondary = colors.onSecondary.animate().value,
+                    background = colors.background.animate().value,
+                    onBackground = colors.onBackground.animate().value,
+                    surface = colors.surface.animate().value,
+                    onSurface = colors.onSurface.animate().value,
+                    onError = colors.onError.animate().value,
+                    error = colors.error.animate().value,
                     isLight = colors.isLight
                 )
             },

@@ -5,7 +5,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -20,6 +19,7 @@ import viach.apps.cache.SystemThemeMode
 import viach.apps.cache.settings.SettingsCache
 import viach.apps.dicing.R
 import viach.apps.dicing.ui.theme.Theme
+import viach.apps.dicing.ui.theme.animate
 import viach.apps.dicing.ui.theme.spacing
 import viach.apps.dicing.ui.view.component.GroupButton
 import viach.apps.dicing.ui.view.component.GroupButtonModel
@@ -94,18 +94,39 @@ fun SettingsScreen(settingsCache: SettingsCache) {
                         contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.l)
                     ) {
                         items(Theme.values()) { theme ->
-                            Box(
-                                modifier = Modifier
-                                    .clip(CircleShape)
+                            Column(
+                                Modifier
+                                    .clip(RoundedCornerShape(MaterialTheme.spacing.s))
                                     .clickable { settingsCache.setTheme(theme.ordinal) }
-                                    .background(theme.getTheme(isSystemInDarkTheme()).background, CircleShape)
-                                    .size(80.dp)
+                                    .width(80.dp)
                                     .border(
                                         4.dp,
-                                        animateColorAsState(if (currentTheme == theme.ordinal) Color.Green else Color.White).value,
-                                        CircleShape
+                                        animateColorAsState(
+                                            if (currentTheme == theme.ordinal) Color.Green
+                                            else MaterialTheme.colors.onBackground
+                                        ).value,
+                                        RoundedCornerShape(MaterialTheme.spacing.s)
                                     )
-                            )
+                            ) {
+                                theme
+                                    .getTheme(!MaterialTheme.colors.isLight)
+                                    .let { c ->
+                                        @Composable
+                                        fun ColorBox(color: Color) {
+                                            Box(
+                                                Modifier
+                                                    .background(color)
+                                                    .fillMaxWidth()
+                                                    .height(40.dp)
+                                            )
+                                        }
+
+                                        ColorBox(color = c.background.animate().value)
+                                        ColorBox(color = c.primary.animate().value)
+                                        ColorBox(color = c.surface.animate().value)
+                                        ColorBox(color = c.primaryVariant.animate().value)
+                                    }
+                            }
                         }
                     }
                 }

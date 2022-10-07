@@ -2,6 +2,7 @@ package viach.apps.cache.status
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
+import com.google.protobuf.GeneratedMessageLite
 import com.google.protobuf.InvalidProtocolBufferException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,7 +12,8 @@ import viach.apps.cache.StatsPreferences
 import java.io.InputStream
 import java.io.OutputStream
 
-object StatsPreferencesSerializer : Serializer<StatsPreferences> {
+//Keeping this for reference
+/*object StatsPreferencesSerializer : Serializer<StatsPreferences> {
     override val defaultValue: StatsPreferences
         get() = StatsPreferences.getDefaultInstance()
 
@@ -28,42 +30,41 @@ object StatsPreferencesSerializer : Serializer<StatsPreferences> {
         withContext(Dispatchers.IO) {
             t.writeTo(output)
         }
+}*/
+
+object StatsPreferencesSerializer : GenericSerializer<StatsPreferences, StatsPreferences.Builder> {
+    override val defaultValue: StatsPreferences get() = StatsPreferences.getDefaultInstance()
+    override val parseFrom: (input: InputStream) -> StatsPreferences get() = StatsPreferences::parseFrom
 }
 
-object SavedGameSerializer : Serializer<SavedGame> {
-    override val defaultValue: SavedGame
-        get() = SavedGame.getDefaultInstance()
+object SavedGameSerializer : GenericSerializer<SavedGame, SavedGame.Builder> {
+    override val defaultValue: SavedGame get() = SavedGame.getDefaultInstance()
+    override val parseFrom: (input: InputStream) -> SavedGame get() = SavedGame::parseFrom
+}
 
-    override suspend fun readFrom(input: InputStream): SavedGame =
+object SettingsPreferencesSerializer : GenericSerializer<SettingsPreferences, SettingsPreferences.Builder> {
+    override val defaultValue: SettingsPreferences get() = SettingsPreferences.getDefaultInstance()
+    override val parseFrom: (input: InputStream) -> SettingsPreferences get() = SettingsPreferences::parseFrom
+}
+
+interface GenericSerializer<MessageType, BuilderType> : Serializer<MessageType>
+        where MessageType : GeneratedMessageLite<MessageType, BuilderType>,
+              BuilderType : GeneratedMessageLite.Builder<MessageType, BuilderType> {
+
+    /**
+     * Call MessageType::parseFrom here!
+     */
+    val parseFrom: (input: InputStream) -> MessageType
+
+    override suspend fun readFrom(input: InputStream): MessageType =
         withContext(Dispatchers.IO) {
             try {
-                SavedGame.parseFrom(input)
+                parseFrom(input)
             } catch (exception: InvalidProtocolBufferException) {
                 throw CorruptionException("Cannot read proto.", exception)
             }
         }
 
-    override suspend fun writeTo(t: SavedGame, output: OutputStream) =
-        withContext(Dispatchers.IO) {
-            t.writeTo(output)
-        }
-}
-
-object SettingsPreferencesSerializer : Serializer<SettingsPreferences> {
-    override val defaultValue: SettingsPreferences
-        get() = SettingsPreferences.getDefaultInstance()
-
-    override suspend fun readFrom(input: InputStream): SettingsPreferences =
-        withContext(Dispatchers.IO) {
-            try {
-                SettingsPreferences.parseFrom(input)
-            } catch (exception: InvalidProtocolBufferException) {
-                throw CorruptionException("Cannot read proto.", exception)
-            }
-        }
-
-    override suspend fun writeTo(t: SettingsPreferences, output: OutputStream) =
-        withContext(Dispatchers.IO) {
-            t.writeTo(output)
-        }
+    override suspend fun writeTo(t: MessageType, output: OutputStream) =
+        withContext(Dispatchers.IO) { t.writeTo(output) }
 }

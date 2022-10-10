@@ -28,7 +28,6 @@ fun GameBar(
     game: Game,
     rowCellsCount: Int,
     playerPosition: Int = 0,
-    layoutPadding: PaddingValues = PaddingValues(12.dp),
     itemPadding: PaddingValues = PaddingValues(MaterialTheme.spacing.m),
     itemsClickable: Boolean = true,
     onPlaceDiceIntent: (position: Int) -> Unit

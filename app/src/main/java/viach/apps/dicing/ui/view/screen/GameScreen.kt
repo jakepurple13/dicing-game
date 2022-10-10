@@ -302,7 +302,6 @@ private fun PortraitScreen(
             game = game,
             rowCellsCount = 3,
             playerPosition = 2,
-            layoutPadding = PaddingValues(MaterialTheme.spacing.l),
             itemPadding = PaddingValues(MaterialTheme.spacing.m),
             itemsClickable = ai == null || !game.gameOver
         ) { position ->
@@ -321,7 +320,6 @@ private fun PortraitScreen(
             gameField = game.getGameField(1),
             game = game,
             rowCellsCount = 3,
-            layoutPadding = PaddingValues(MaterialTheme.spacing.l),
             itemPadding = PaddingValues(MaterialTheme.spacing.m),
             playerPosition = 1,
             itemsClickable = !game.gameOver
@@ -374,7 +372,6 @@ private fun LandscapeScreen(
                     gameField = game.getGameField(1),
                     game = game,
                     rowCellsCount = 3,
-                    layoutPadding = PaddingValues(MaterialTheme.spacing.l),
                     itemPadding = PaddingValues(MaterialTheme.spacing.m),
                 ) { position ->
                     if (game.isPlayerMove(1)) {
@@ -403,7 +400,6 @@ private fun LandscapeScreen(
                     gameField = game.getGameField(2),
                     game = game,
                     rowCellsCount = 3,
-                    layoutPadding = PaddingValues(MaterialTheme.spacing.l),
                     itemPadding = PaddingValues(MaterialTheme.spacing.m),
                     itemsClickable = ai == null
                 ) { position ->
